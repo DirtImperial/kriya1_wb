@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background:#000; }
+  ::-webkit-scrollbar { width:0; height:0; }
+  img { image-rendering:pixelated; }
+  @keyframes pxBreathe { 0%,100%{transform:scale(.74)} 50%{transform:scale(1)} }
+  @keyframes pxInhale { 0%{opacity:1}46%{opacity:1}54%{opacity:0}96%{opacity:0}100%{opacity:1} }
+  @keyframes pxExhale { 0%{opacity:0}46%{opacity:0}54%{opacity:1}96%{opacity:1}100%{opacity:0} }
+  @keyframes waveMark { 0%{left:50%;top:84%} 25%{left:6%;top:16%} 50%{left:50%;top:84%} 75%{left:94%;top:16%} 100%{left:50%;top:84%} }
+  @keyframes fillBar { 0%,100%{top:66%} 50%{top:6%} }
+  @keyframes pranaUp { 0%{top:84%;opacity:.4} 12%{opacity:1} 50%{top:8%;opacity:1} 60%{opacity:1} 100%{top:84%;opacity:.4} }
+  @keyframes spinePulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+  @keyframes starBlink { 0%,100%{opacity:.55} 50%{opacity:1} }
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="position:relative; height:100dvh; overflow-y:auto; overflow-x:hidden; scroll-snap-type:y mandatory; background:#05050a; color:#fff; font-family:'VT323',monospace;">
+
+  <div style="position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.55; background-image:radial-gradient(1px 1px at 14% 16%,#fff,transparent),radial-gradient(1px 1px at 30% 44%,#9fe0ff,transparent),radial-gradient(1px 1px at 49% 12%,#fff,transparent),radial-gradient(1px 1px at 66% 30%,#ffd27a,transparent),radial-gradient(1px 1px at 80% 22%,#fff,transparent),radial-gradient(1px 1px at 90% 50%,#9fe0ff,transparent),radial-gradient(1px 1px at 20% 70%,#fff,transparent),radial-gradient(1px 1px at 40% 82%,#ff9fd0,transparent),radial-gradient(1px 1px at 74% 74%,#fff,transparent),radial-gradient(1px 1px at 88% 86%,#fff,transparent); animation:starBlink 5s steps(2) infinite;"></div>
+  <div style="position:fixed; inset:0; pointer-events:none; z-index:40; opacity:.22; background:repeating-linear-gradient(0deg,transparent 0 2px,rgba(0,0,0,1) 2px 4px);"></div>
+
+  <nav onClick="{{ goTo }}" style="position:fixed; right:max(16px,2vw); top:50%; transform:translateY(-50%); z-index:30; display:flex; flex-direction:column; gap:14px; align-items:center;">
+    <sc-for list="{{ dots }}" as="d" hint-placeholder-count="8">
+      <span data-dot="{{ $index }}" style="width:9px; height:9px; background:rgba(255,255,255,.45); cursor:pointer; transition:all .25s steps(2); display:block;"></span>
+    </sc-for>
+  </nav>
+
+  <!-- 0 — INTRO -->
+  <section data-step data-screen-label="00 — Welcome" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:60px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(26px); transition:opacity .9s steps(6),transform .9s steps(6); display:flex; flex-direction:column; align-items:center; text-align:center; gap:26px; max-width:760px;">
+      <div style="font-family:'Silkscreen'; font-size:clamp(.66rem,1.6vw,.8rem); color:#2fd4c8; letter-spacing:.08em;">FULL BODY KRIYA</div>
+      <h1 style="font-family:'Silkscreen'; font-weight:700; font-size:clamp(1.7rem,6.6vw,4rem); line-height:1.15; color:#f6e23a; text-shadow:4px 4px 0 #6b5a00;">WAVE<br>BREATHING<span style="color:#2fd4c8;">*</span></h1>
+      <div style="width:min(70vw,420px); height:4px; background:#fff;"></div>
+      <p style="font-size:clamp(1.25rem,3vw,1.7rem); color:#cfe9ff; line-height:1.35; max-width:540px;">A guided walkthrough from body to breath to the subtle spine.<br><span style="color:#2fd4c8;">(ALSO WORKS GREAT LYING DOWN!!)</span></p>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:6px; font-family:'Silkscreen'; font-size:.62rem; color:#fff;">
+        <span>SCROLL TO BEGIN</span>
+        <span style="animation:blink 1s steps(2) infinite; font-size:1.2rem;">▼</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 — SEAT -->
+  <section data-step data-screen-label="01 — The Seat" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:60px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(26px); transition:opacity .9s steps(6),transform .9s steps(6); display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; max-width:680px;">
+      <div style="width:min(56vw,240px); border:3px solid #fff; background:#000; line-height:0; overflow:hidden;">
+        <img src="assets/figure2.png" alt="seated figure" style="width:100%; height:auto; display:block;">
+      </div>
+      <div style="font-family:'Silkscreen'; font-size:clamp(.66rem,1.6vw,.8rem); color:#2fd4c8;">[ 01 ] THE SEAT</div>
+      <h2 style="font-family:'Silkscreen'; font-size:clamp(1.3rem,4.4vw,2.4rem); line-height:1.25; color:#f6e23a;">FIND A COMFORTABLE SEAT</h2>
+      <p style="font-size:clamp(1.2rem,2.8vw,1.6rem); color:#e8eefc; line-height:1.4;">Settle into a stable, easy posture &mdash; seated or lying down. Let the spine grow long, the shoulders soften, the hands rest. Nothing is forced here: just alert, comfortable stillness.</p>
+    </div>
+  </section>
+
+  <!-- 2 — WAVE BREATH -->
+  <section data-step data-screen-label="02 — The Wave Breath" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:60px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(26px); transition:opacity .9s steps(6),transform .9s steps(6); display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px; max-width:640px;">
+      <div style="font-family:'Silkscreen'; font-size:clamp(.66rem,1.6vw,.8rem); color:#2fd4c8;">[ 02 ] THE WAVE BREATH</div>
+      <h2 style="font-family:'Silkscreen'; font-size:clamp(1.3rem,4.4vw,2.4rem); line-height:1.25; color:#f6e23a;">BREATHE IN SLOW WAVES</h2>
+
+      <!-- recreated wave-breathing chart -->
+      <div style="position:relative; width:min(90vw,560px); aspect-ratio:1.9/1; border:3px solid #fff; background:#05050a; margin:4px 0;">
+        <div style="position:absolute; left:0; top:0; bottom:0; width:0; border-left:2px dashed #fff;"></div>
+        <div style="position:absolute; right:0; top:0; bottom:0; width:0; border-right:2px dashed #fff;"></div>
+        <div style="position:absolute; left:6%; top:6px; font-family:'Silkscreen'; font-size:.5rem; color:#fff;">FADE OUT</div>
+        <div style="position:absolute; right:6%; top:6px; font-family:'Silkscreen'; font-size:.5rem; color:#fff;">FADE IN</div>
+        <div style="position:absolute; left:0; right:0; top:33%; border-top:1px dashed rgba(255,255,255,.45);"></div>
+        <div style="position:absolute; right:-30px; top:30%; font-family:'Silkscreen'; font-size:.5rem; color:#fff;">75%</div>
+        <div style="position:absolute; right:-30px; top:52%; font-family:'Silkscreen'; font-size:.5rem; color:#fff;">50%</div>
+        <div style="position:absolute; left:18%; right:18%; top:14%; font-size:1.05rem; color:#cfe9ff; line-height:1.05;">SLOW BREATHING HERE BUT NEVER HOLD</div>
+        <div style="position:absolute; inset:0; clip-path:polygon(0% 24%,8% 33%,16% 45%,26% 60%,36% 74%,46% 88%,50% 96%,50% 100%,0% 100%); background:#2fd4c8;"></div>
+        <div style="position:absolute; inset:0; clip-path:polygon(100% 24%,92% 33%,84% 45%,74% 60%,64% 74%,54% 88%,50% 96%,50% 100%,100% 100%); background:#ff4f8b;"></div>
+        <div style="position:absolute; inset:0; clip-path:polygon(28% 100%,38% 90%,50% 86%,62% 90%,72% 100%); background:#3d6bff;"></div>
+        <div style="position:absolute; left:6%; top:50%; width:33%; font-size:.72rem; color:#05050a; line-height:1.18; text-align:left; font-weight:bold;">EXHALATION<br>CONTRACTION<br>RETREAT</div>
+        <div style="position:absolute; right:6%; top:50%; width:33%; font-size:.72rem; color:#05050a; line-height:1.18; text-align:right; font-weight:bold;">INHALATION<br>EXPANSION<br>PARTICIPATION</div>
+        <div style="position:absolute; left:50%; top:84%; width:14px; height:14px; margin:-7px 0 0 -7px; background:#fff; box-shadow:0 0 10px 3px #fff; animation:waveMark 9s linear infinite;"></div>
+        <div style="position:absolute; left:0; right:0; bottom:-22px; display:flex; align-items:center; justify-content:center; gap:8px; font-family:'Silkscreen'; font-size:.5rem; color:#fff;"><span>&larr;</span><span>EQUAL DURATION</span><span>&rarr;</span></div>
+      </div>
+
+      <p style="font-size:clamp(1.2rem,2.8vw,1.6rem); color:#e8eefc; line-height:1.4; margin-top:18px;">Inhale and exhale for equal durations &mdash; never quite filling, never quite emptying, never holding. Keep the diaphragm loose until the rhythm becomes almost involuntary, like tide against the shore.</p>
+    </div>
+  </section>
+
+  <!-- 3 — BODY IN SPACE -->
+  <section data-step data-screen-label="03 — Body in Space" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:60px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(26px); transition:opacity .9s steps(6),transform .9s steps(6); display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; max-width:680px;">
+      <div style="width:min(88vw,520px); border:3px solid #fff; background:#000; line-height:0; position:relative;">
+        <img src="assets/mountain.png" alt="mountain beneath the cosmos" style="width:100%; height:auto; display:block;">
+        <div style="position:absolute; left:8px; top:6px; font-family:'Silkscreen'; font-size:.56rem; color:#fff; text-shadow:1px 1px 0 #000;">COSMOS</div>
+        <div style="position:absolute; left:8px; bottom:6px; font-family:'Silkscreen'; font-size:.56rem; color:#ffcf6b; text-shadow:1px 1px 0 #000;">EARTH</div>
+      </div>
+      <div style="font-family:'Silkscreen'; font-size:clamp(.66rem,1.6vw,.8rem); color:#ffcf6b;">[ 03 ] BODY IN SPACE</div>
+      <h2 style="font-family:'Silkscreen'; font-size:clamp(1.3rem,4.4vw,2.4rem); line-height:1.25; color:#f6e23a;">BETWEEN EARTH &amp; COSMOS</h2>
+      <p style="font-size:clamp(1.2rem,2.8vw,1.6rem); color:#e8eefc; line-height:1.4;">Sense yourself seated in vast space &mdash; rooted to the ground like a mountain, crowned by open sky. Below is earth; above is cosmos. You are the still axis that joins them.</p>
+    </div>
+  </section>
+
+  <!-- 4 — FILL & EMPTY -->
+  <section data-step data-screen-label="04 — Fill &amp; Empty" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:60px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(26px); transition:opacity .9s steps(6),transform .9s steps(6); display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; max-width:680px;">
+      <div style="display:flex; align-items:center; gap:26px;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <span style="font-family:'Silkscreen'; font-size:.62rem; color:#ff4f8b;">FILL</span>
+          <span style="width:0; height:0; border-left:11px solid transparent; border-right:11px solid transparent; border-bottom:15px solid #ff4f8b;"></span>
+          <div style="position:relative; width:28px; height:min(34vh,230px); background:linear-gradient(#ff4f8b,#9a5bd6 50%,#3d6bff); border:2px solid #fff;">
+            <div style="position:absolute; left:-2px; right:-2px; height:10px; background:#fff; box-shadow:0 0 10px 2px #fff; animation:fillBar 9s ease-in-out infinite;"></div>
+          </div>
+          <span style="width:0; height:0; border-left:11px solid transparent; border-right:11px solid transparent; border-top:15px solid #3d6bff;"></span>
+          <span style="font-family:'Silkscreen'; font-size:.62rem; color:#3d6bff;">EMPTY</span>
+        </div>
+        <div style="width:min(44vw,200px); border:3px solid #fff; background:#000; line-height:0; overflow:hidden;">
+          <img src="assets/figure2.png" alt="the vessel" style="width:100%; height:auto; display:block;">
+        </div>
+      </div>
+      <div style="font-family:'Silkscreen'; font-size:clamp(.66rem,1.6vw,.8rem); color:#ff4f8b;">[ 04 ] FILL &amp; EMPTY</div>
+      <h2 style="font-family:'Silkscreen'; font-size:clamp(1.3rem,4.4vw,2.4rem); line-height:1.25; color:#f6e23a;">FILL AND EMPTY THE VESSEL</h2>
+      <p style="font-size:clamp(1.2rem,2.8vw,1.6rem); color:#e8eefc; line-height:1.4;">The whole body becomes one vessel. The in-breath fills and &ldquo;charges&rdquo; the skull and upper torso; the out-breath suffuses the pelvis and legs &mdash; expanding into the cosmos, rooting into the earth.</p>
+    </div>
+  </section>
+
+  <!-- 5 — MOVE THE PRANA -->
+  <section data-step data-screen-label="05 — Move the Prana" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:60px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(26px); transition:opacity .9s steps(6),transform .9s steps(6); display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; max-width:680px;">
+      <div style="position:relative; width:min(58vw,240px); border:3px solid #fff; background:#000; line-height:0; overflow:hidden;">
+        <img src="assets/figure2.png" alt="prana moving through the body" style="width:100%; height:auto; display:block;">
+        <div style="position:absolute; left:50%; transform:translateX(-50%); width:12px; height:12px; background:#fff; box-shadow:0 0 14px 5px #ffd27a; animation:pranaUp 9s ease-in-out infinite;"></div>
+      </div>
+      <div style="font-family:'Silkscreen'; font-size:clamp(.66rem,1.6vw,.8rem); color:#ff9fd0;">[ 05 ] MOVE THE PRANA</div>
+      <h2 style="font-family:'Silkscreen'; font-size:clamp(1.3rem,4.4vw,2.4rem); line-height:1.25; color:#f6e23a;">MOVE ENERGY THROUGH THE SPINE</h2>
+      <p style="font-size:clamp(1.2rem,2.8vw,1.6rem); color:#e8eefc; line-height:1.4;">Now add the current. Draw prana up from the base of the spine into the skull as you inhale; release it back down through the body as you exhale. Always visualize the influx and the outflux.</p>
+    </div>
+  </section>
+
+  <!-- 6 — PENETRATE THE SPINE -->
+  <section data-step data-screen-label="06 — Penetrate the Spine" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:60px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(26px); transition:opacity .9s steps(6),transform .9s steps(6); display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; max-width:680px;">
+      <div style="position:relative; width:min(58vw,240px); border:3px solid #fff; background:#000; line-height:0; overflow:hidden;">
+        <img src="assets/figure2.png" alt="the spinal channel" style="width:100%; height:auto; display:block; transform:scale(1.35); transform-origin:50% 30%;">
+        <div style="position:absolute; top:6%; bottom:6%; left:50%; transform:translateX(-50%); width:5px; background:linear-gradient(#fff,#9fe0ff,#fff); box-shadow:0 0 16px 4px rgba(255,255,255,.8); animation:spinePulse 3.4s ease-in-out infinite;"></div>
+      </div>
+      <div style="font-family:'Silkscreen'; font-size:clamp(.66rem,1.6vw,.8rem); color:#fff;">[ 06 ] PENETRATE THE SPINE</div>
+      <h2 style="font-family:'Silkscreen'; font-size:clamp(1.3rem,4.4vw,2.4rem); line-height:1.25; color:#f6e23a;">GATHER INTO THE SPINAL CHANNEL</h2>
+      <p style="font-size:clamp(1.2rem,2.8vw,1.6rem); color:#e8eefc; line-height:1.4;">Finally, narrow attention to the spinal channel itself. Let breath, energy and awareness move as a single current through the core of the spine. This unifies everything &mdash; the whole practice, breathing as one.</p>
+    </div>
+  </section>
+
+  <!-- 7 — REMEMBER -->
+  <section data-step data-screen-label="07 — Remember" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:60px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(26px); transition:opacity .9s steps(6),transform .9s steps(6); display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; max-width:620px;">
+      <div style="font-family:'Silkscreen'; font-size:clamp(.66rem,1.6vw,.8rem); color:#2fd4c8;">[ * ] REMEMBER</div>
+      <h2 style="font-family:'Silkscreen'; font-size:clamp(1.3rem,4.4vw,2.4rem); line-height:1.25; color:#f6e23a;">A FEW REMINDERS</h2>
+      <ul style="list-style:none; display:flex; flex-direction:column; gap:14px; width:100%; text-align:left; margin-top:4px;">
+        <sc-for list="{{ reminders }}" as="r" hint-placeholder-count="5">
+          <li style="display:flex; gap:14px; align-items:flex-start; font-size:clamp(1.18rem,2.7vw,1.55rem); color:#e8eefc; line-height:1.3;">
+            <span style="flex:none; width:11px; height:11px; background:#2fd4c8; transform:translateY(5px);"></span>
+            <span>{{ r }}</span>
+          </li>
+        </sc-for>
+      </ul>
+      <div style="margin-top:14px; width:min(78vw,380px); border:3px solid #fff; line-height:0;">
+        <img src="assets/poster.png" alt="original practice chart" style="width:100%; height:auto; display:block;">
+      </div>
+      <div style="font-family:'Silkscreen'; font-size:.54rem; color:#888;">THE ORIGINAL CHART</div>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    if (!this.root) return;
+    const root = this.root;
+    const steps = Array.from(root.querySelectorAll('[data-step]'));
+    const dots = Array.from(root.querySelectorAll('[data-dot]'));
+    let active = -1;
+    const setActive = (i) => {
+      if (i === active) return;
+      active = i;
+      dots.forEach((d, di) => {
+        const on = di === i;
+        d.style.background = on ? '#f6e23a' : 'rgba(255,255,255,.45)';
+        d.style.transform = on ? 'scale(1.7)' : 'scale(1)';
+        d.style.boxShadow = on ? '0 0 8px rgba(246,226,58,.9)' : 'none';
+      });
+    };
+    const update = () => {
+      const top = root.scrollTop, h = root.clientHeight, center = top + h / 2;
+      let best = 0, bestDist = Infinity;
+      steps.forEach((s, i) => {
+        const sTop = s.offsetTop, sH = s.offsetHeight;
+        const reveal = s.querySelector('[data-reveal]');
+        const inView = sTop < top + h * 0.85 && sTop + sH > top + h * 0.15;
+        if (reveal) {
+          if (inView) { reveal.style.opacity = '1'; reveal.style.transform = 'none'; }
+          else { reveal.style.opacity = '0'; reveal.style.transform = 'translateY(26px)'; }
+        }
+        const dist = Math.abs(sTop + sH / 2 - center);
+        if (dist < bestDist) { bestDist = dist; best = i; }
+      });
+      setActive(best);
+    };
+    let ticking = false;
+    this._onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { update(); ticking = false; });
+    };
+    root.addEventListener('scroll', this._onScroll, { passive: true });
+    requestAnimationFrame(update);
+    setTimeout(update, 120);
+  }
+  componentWillUnmount() { if (this._onScroll && this.root) this.root.removeEventListener('scroll', this._onScroll); }
+  renderVals() {
+    return {
+      rootRef: (el) => { this.root = el; },
+      dots: [0, 1, 2, 3, 4, 5, 6, 7],
+      reminders: [
+        'Never fill or empty the lungs completely.',
+        'Keep the diaphragm free of tension.',
+        'Let the breath become rhythmic, almost involuntary.',
+        'Always visualize the influx and the outflux.',
+        'Wave breathing can accompany all kriyas.'
+      ],
+      goTo: (e) => {
+        const t = e.target.closest('[data-dot]');
+        if (!t || !this.root) return;
+        const sec = this.root.querySelectorAll('[data-step]')[+t.dataset.dot];
+        if (sec) this.root.scrollTo({ top: sec.offsetTop, behavior: 'smooth' });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

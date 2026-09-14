@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,16..72,300;0,16..72,400;1,16..72,300&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #06060e; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  @keyframes breathe { 0%,100% { transform: scale(.6); } 50% { transform: scale(.92); } }
+  @keyframes ring { 0%,100% { transform: scale(.78); opacity:.25; } 50% { transform: scale(1.18); opacity:.6; } }
+  @keyframes ring2 { 0%,100% { transform: scale(.95); opacity:.15; } 50% { transform: scale(1.4); opacity:.4; } }
+  @keyframes inhaleText { 0%{opacity:1}46%{opacity:1}54%{opacity:0}96%{opacity:0}100%{opacity:1} }
+  @keyframes exhaleText { 0%{opacity:0}46%{opacity:0}54%{opacity:1}96%{opacity:1}100%{opacity:0} }
+  @keyframes fillLevel { 0%,100%{height:30%} 50%{height:84%} }
+  @keyframes prana { 0%{top:80%;opacity:.5} 12%{opacity:1} 50%{top:11%;opacity:1} 62%{opacity:1} 100%{top:80%;opacity:.5} }
+  @keyframes spineGlow { 0%,100%{opacity:.35;filter:blur(2px)} 50%{opacity:1;filter:blur(0)} }
+  @keyframes kenburns { 0%{transform:scale(1)} 100%{transform:scale(1.12)} }
+  @keyframes hintBob { 0%,100%{transform:translateY(0);opacity:.5} 50%{transform:translateY(9px);opacity:1} }
+  @keyframes twinkle { 0%,100%{opacity:.5} 50%{opacity:1} }
+  @keyframes softPulse { 0%,100%{transform:scale(.85);opacity:.7} 50%{transform:scale(1);opacity:1} }
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="position:relative; height:100dvh; overflow-y:auto; overflow-x:hidden; scroll-snap-type:y mandatory; background:linear-gradient(180deg,#06040f 0%,#0a0a1c 38%,#0b0913 66%,#120b08 100%); color:#fff; font-family:'Space Grotesk',sans-serif;">
+
+  <div style="position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.7; background-image:radial-gradient(1.5px 1.5px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 28% 42%,#cdd6ff,transparent),radial-gradient(1.5px 1.5px at 47% 12%,#fff,transparent),radial-gradient(1px 1px at 63% 33%,#d7c4ff,transparent),radial-gradient(1px 1px at 78% 21%,#fff,transparent),radial-gradient(1.5px 1.5px at 88% 48%,#bcd0ff,transparent),radial-gradient(1px 1px at 18% 64%,#fff,transparent),radial-gradient(1px 1px at 38% 78%,#d7c4ff,transparent),radial-gradient(1.5px 1.5px at 72% 70%,#fff,transparent),radial-gradient(1px 1px at 92% 82%,#cdd6ff,transparent); animation:twinkle 6s ease-in-out infinite;"></div>
+
+  <nav onClick="{{ goTo }}" style="position:fixed; right:max(18px,2vw); top:50%; transform:translateY(-50%); z-index:30; display:flex; flex-direction:column; gap:15px; align-items:center;">
+    <sc-for list="{{ dots }}" as="d" hint-placeholder-count="8">
+      <span data-dot="{{ $index }}" style="width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.5); cursor:pointer; transition:all .4s ease; display:block;"></span>
+    </sc-for>
+  </nav>
+
+  <!-- 0 — INTRO -->
+  <section data-step data-screen-label="00 — Welcome" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:64px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity 1.1s ease,transform 1.1s ease; display:flex; flex-direction:column; align-items:center; text-align:center; gap:30px; max-width:840px;">
+      <div style="position:relative; width:min(46vw,170px); height:min(46vw,170px); display:flex; align-items:center; justify-content:center;">
+        <div style="position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle,rgba(91,124,255,.35),transparent 70%); animation:softPulse 7s ease-in-out infinite;"></div>
+        <div style="width:42%; height:42%; border-radius:50%; background:radial-gradient(circle at 50% 38%,#9be7ff,#5b7cff 60%,#3a2f7a 100%); box-shadow:0 0 60px rgba(91,124,255,.6);"></div>
+      </div>
+      <div style="font-size:clamp(.72rem,1.7vw,.86rem); letter-spacing:.42em; text-transform:uppercase; color:#57e0d6;">Full Body Kriya</div>
+      <h1 style="font-weight:600; font-size:clamp(2.8rem,9vw,5.6rem); line-height:.98; letter-spacing:-.02em;">Wave<br>Breathing</h1>
+      <p style="font-family:'Newsreader',serif; font-weight:300; font-size:clamp(1.1rem,2.6vw,1.5rem); color:rgba(255,255,255,.72); max-width:520px; line-height:1.6;">A guided walkthrough from the body to the breath to the subtle spine. Also works beautifully lying down.</p>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:8px; font-size:.72rem; letter-spacing:.32em; text-transform:uppercase; color:rgba(255,255,255,.5);">
+        <span>Scroll to begin</span>
+        <span style="animation:hintBob 2s ease-in-out infinite; font-size:1.1rem;">↓</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 — SEAT -->
+  <section data-step data-screen-label="01 — The Seat" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:64px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity 1.1s ease,transform 1.1s ease; display:flex; flex-direction:column; align-items:center; text-align:center; gap:22px; max-width:720px;">
+      <div style="font-family:'Newsreader',serif; font-style:italic; font-size:clamp(2rem,6vw,3rem); color:rgba(255,255,255,.22); line-height:1;">01</div>
+      <div style="font-size:clamp(.7rem,1.6vw,.82rem); letter-spacing:.4em; text-transform:uppercase; color:#57e0d6;">The Seat</div>
+      <h2 style="font-weight:600; font-size:clamp(2rem,5.5vw,3.4rem); line-height:1.05; letter-spacing:-.015em;">Find a comfortable seat</h2>
+      <p style="font-family:'Newsreader',serif; font-weight:300; font-size:clamp(1.08rem,2.5vw,1.4rem); color:rgba(255,255,255,.78); line-height:1.7;">Settle into a stable, easy posture — seated or lying down. Let the spine grow long, the shoulders soften, the hands come to rest. Nothing is forced here; this is simply alert, comfortable stillness.</p>
+    </div>
+  </section>
+
+  <!-- 2 — WAVE BREATH -->
+  <section data-step data-screen-label="02 — The Wave Breath" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:64px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity 1.1s ease,transform 1.1s ease; display:flex; flex-direction:column; align-items:center; text-align:center; gap:26px; max-width:720px;">
+      <div style="position:relative; width:min(64vw,260px); height:min(64vw,260px); display:flex; align-items:center; justify-content:center; margin-bottom:4px;">
+        <div style="position:absolute; inset:0; border-radius:50%; border:1px solid rgba(87,224,214,.4); animation:ring 9s ease-in-out infinite;"></div>
+        <div style="position:absolute; inset:0; border-radius:50%; border:1px solid rgba(91,124,255,.3); animation:ring2 9s ease-in-out infinite;"></div>
+        <div style="width:58%; height:58%; border-radius:50%; background:radial-gradient(circle at 50% 38%,#8bf3ff,#57c8e0 45%,#5b7cff 100%); box-shadow:0 0 70px rgba(87,224,214,.55); animation:breathe 9s ease-in-out infinite;"></div>
+      </div>
+      <div style="position:relative; height:1.5em; width:200px; font-size:clamp(.78rem,1.8vw,.92rem); letter-spacing:.4em; text-transform:uppercase; color:#9be0ff;">
+        <span style="position:absolute; inset:0; animation:inhaleText 9s ease-in-out infinite;">Inhale</span>
+        <span style="position:absolute; inset:0; animation:exhaleText 9s ease-in-out infinite;">Exhale</span>
+      </div>
+      <div style="font-size:clamp(.7rem,1.6vw,.82rem); letter-spacing:.4em; text-transform:uppercase; color:#57e0d6;">The Wave Breath</div>
+      <h2 style="font-weight:600; font-size:clamp(2rem,5.5vw,3.4rem); line-height:1.05; letter-spacing:-.015em;">Breathe in slow waves</h2>
+      <p style="font-family:'Newsreader',serif; font-weight:300; font-size:clamp(1.08rem,2.5vw,1.4rem); color:rgba(255,255,255,.78); line-height:1.7;">Inhale and exhale for equal durations — never quite filling, never quite emptying, and never holding. Keep the diaphragm free of tension until the rhythm becomes almost involuntary, like the tide drawing against the shore.</p>
+    </div>
+  </section>
+
+  <!-- 3 — BODY IN SPACE -->
+  <section data-step data-screen-label="03 — Body in Space" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:64px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity 1.1s ease,transform 1.1s ease; display:flex; flex-direction:column; align-items:center; text-align:center; gap:24px; max-width:720px;">
+      <div style="width:min(86vw,560px); aspect-ratio:1/.78; border-radius:14px; overflow:hidden; box-shadow:0 24px 80px rgba(0,0,0,.6); border:1px solid rgba(255,255,255,.1);">
+        <img src="assets/mountain.png" alt="mountain beneath the cosmos" style="width:100%; height:100%; object-fit:cover; object-position:center 38%; display:block; animation:kenburns 18s ease-in-out infinite alternate;">
+      </div>
+      <div style="font-size:clamp(.7rem,1.6vw,.82rem); letter-spacing:.4em; text-transform:uppercase; color:#ffb463;">Body in Space</div>
+      <h2 style="font-weight:600; font-size:clamp(2rem,5.5vw,3.4rem); line-height:1.05; letter-spacing:-.015em;">Between earth &amp; cosmos</h2>
+      <p style="font-family:'Newsreader',serif; font-weight:300; font-size:clamp(1.08rem,2.5vw,1.4rem); color:rgba(255,255,255,.78); line-height:1.7;">Sense yourself seated in vast space — rooted to the ground like a mountain, crowned by open sky. Below is earth; above is cosmos. You are the still axis that joins them.</p>
+    </div>
+  </section>
+
+  <!-- 4 — FILL & EMPTY -->
+  <section data-step data-screen-label="04 — Fill &amp; Empty" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:64px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity 1.1s ease,transform 1.1s ease; display:flex; flex-direction:column; align-items:center; text-align:center; gap:24px; max-width:720px;">
+      <div style="display:flex; align-items:stretch; gap:26px; height:min(40vh,280px);">
+        <div style="display:flex; flex-direction:column; justify-content:space-between; align-items:flex-end; font-size:.7rem; letter-spacing:.28em; text-transform:uppercase; padding:6px 0;">
+          <span style="color:#ff5e9c;">Fill ↑</span>
+          <span style="color:#5b7cff;">Empty ↓</span>
+        </div>
+        <div style="position:relative; width:54px; border-radius:27px; background:linear-gradient(#15102b,#0a1030); overflow:hidden; border:1px solid rgba(255,255,255,.12);">
+          <div style="position:absolute; left:0; right:0; bottom:0; border-radius:27px; background:linear-gradient(180deg,#ff5e9c,#9a6bff 50%,#5b7cff); box-shadow:0 0 40px rgba(255,94,156,.4); animation:fillLevel 9s ease-in-out infinite;"></div>
+        </div>
+        <div style="width:min(38vw,210px); border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,.1); background:#000;">
+          <img src="assets/chakra-body.png" alt="luminous seated body" style="width:100%; height:100%; object-fit:cover; object-position:center 30%; display:block;">
+        </div>
+      </div>
+      <div style="font-size:clamp(.7rem,1.6vw,.82rem); letter-spacing:.4em; text-transform:uppercase; color:#ff5e9c;">Fill &amp; Empty</div>
+      <h2 style="font-weight:600; font-size:clamp(2rem,5.5vw,3.4rem); line-height:1.05; letter-spacing:-.015em;">Fill and empty the vessel</h2>
+      <p style="font-family:'Newsreader',serif; font-weight:300; font-size:clamp(1.08rem,2.5vw,1.4rem); color:rgba(255,255,255,.78); line-height:1.7;">Let the whole body become one vessel. The in-breath fills and charges the skull and upper torso; the out-breath suffuses the pelvis and the legs — expanding upward into the cosmos, rooting downward into the earth.</p>
+    </div>
+  </section>
+
+  <!-- 5 — MOVE THE PRANA -->
+  <section data-step data-screen-label="05 — Move the Prana" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:64px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity 1.1s ease,transform 1.1s ease; display:flex; flex-direction:column; align-items:center; text-align:center; gap:24px; max-width:720px;">
+      <div style="position:relative; width:min(70vw,300px); border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,.1); background:#000;">
+        <img src="assets/chakra-body.png" alt="energy centres along the spine" style="width:100%; height:auto; display:block;">
+        <div style="position:absolute; left:50%; transform:translateX(-50%); width:16px; height:16px; border-radius:50%; background:radial-gradient(circle,#fff,#ffd27a 50%,transparent 75%); box-shadow:0 0 24px 8px rgba(255,210,122,.8); animation:prana 9s ease-in-out infinite;"></div>
+      </div>
+      <div style="font-size:clamp(.7rem,1.6vw,.82rem); letter-spacing:.4em; text-transform:uppercase; color:#a98bff;">Move the Prana</div>
+      <h2 style="font-weight:600; font-size:clamp(2rem,5.5vw,3.4rem); line-height:1.05; letter-spacing:-.015em;">Move energy through the spine</h2>
+      <p style="font-family:'Newsreader',serif; font-weight:300; font-size:clamp(1.08rem,2.5vw,1.4rem); color:rgba(255,255,255,.78); line-height:1.7;">Now add the current. Draw prana up from the base of the spine into the skull as you inhale; release it back down through the body as you exhale. Always visualize both the influx and the outflux.</p>
+    </div>
+  </section>
+
+  <!-- 6 — PENETRATE THE SPINE -->
+  <section data-step data-screen-label="06 — Penetrate the Spine" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:64px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity 1.1s ease,transform 1.1s ease; display:flex; flex-direction:column; align-items:center; text-align:center; gap:24px; max-width:720px;">
+      <div style="position:relative; width:min(70vw,300px); border-radius:14px; overflow:hidden; border:1px solid rgba(255,255,255,.1); background:#000;">
+        <img src="assets/chakra-body.png" alt="the spinal channel" style="width:100%; height:auto; display:block;">
+        <div style="position:absolute; top:8%; bottom:8%; left:50%; transform:translateX(-50%); width:5px; border-radius:3px; background:linear-gradient(180deg,#d9b3ff,#fff,#9beaff); box-shadow:0 0 28px 6px rgba(255,255,255,.7); animation:spineGlow 4.5s ease-in-out infinite;"></div>
+      </div>
+      <div style="font-size:clamp(.7rem,1.6vw,.82rem); letter-spacing:.4em; text-transform:uppercase; color:#e8def9;">Penetrate the Spine</div>
+      <h2 style="font-weight:600; font-size:clamp(2rem,5.5vw,3.4rem); line-height:1.05; letter-spacing:-.015em;">Gather into the spinal channel</h2>
+      <p style="font-family:'Newsreader',serif; font-weight:300; font-size:clamp(1.08rem,2.5vw,1.4rem); color:rgba(255,255,255,.78); line-height:1.7;">Finally, narrow the attention to the spinal channel itself. Let breath, energy and awareness move as a single current through the core of the spine. This is where it all comes together — the whole practice, breathing as one.</p>
+    </div>
+  </section>
+
+  <!-- 7 — REMEMBER -->
+  <section data-step data-screen-label="07 — Remember" style="min-height:100dvh; scroll-snap-align:start; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; padding:64px 24px;">
+    <div data-reveal style="opacity:0; transform:translateY(30px); transition:opacity 1.1s ease,transform 1.1s ease; display:flex; flex-direction:column; align-items:center; text-align:center; gap:26px; max-width:640px;">
+      <div style="font-size:clamp(.7rem,1.6vw,.82rem); letter-spacing:.4em; text-transform:uppercase; color:#57e0d6;">Remember</div>
+      <h2 style="font-weight:600; font-size:clamp(2rem,5.5vw,3.4rem); line-height:1.05; letter-spacing:-.015em;">A few reminders</h2>
+      <ul style="list-style:none; display:flex; flex-direction:column; gap:16px; width:100%; text-align:left; margin-top:4px;">
+        <sc-for list="{{ reminders }}" as="r" hint-placeholder-count="5">
+          <li style="display:flex; gap:14px; align-items:baseline; font-family:'Newsreader',serif; font-weight:300; font-size:clamp(1.02rem,2.3vw,1.28rem); color:rgba(255,255,255,.82); line-height:1.55;">
+            <span style="flex:none; width:7px; height:7px; border-radius:50%; background:#57e0d6; transform:translateY(2px);"></span>
+            <span>{{ r }}</span>
+          </li>
+        </sc-for>
+      </ul>
+      <div style="margin-top:12px; width:min(72vw,360px); border-radius:10px; overflow:hidden; border:1px solid rgba(255,255,255,.12); opacity:.85;">
+        <img src="assets/poster.png" alt="original practice chart" style="width:100%; height:auto; display:block;">
+      </div>
+      <div style="font-size:.66rem; letter-spacing:.28em; text-transform:uppercase; color:rgba(255,255,255,.4);">The original chart</div>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    if (!this.root) return;
+    const root = this.root;
+    const steps = Array.from(root.querySelectorAll('[data-step]'));
+    const dots = Array.from(root.querySelectorAll('[data-dot]'));
+    let active = -1;
+    const setActive = (i) => {
+      if (i === active) return;
+      active = i;
+      dots.forEach((d, di) => {
+        const on = di === i;
+        d.style.opacity = on ? '1' : '.4';
+        d.style.transform = on ? 'scale(1.7)' : 'scale(1)';
+        d.style.background = on ? '#57e0d6' : 'rgba(255,255,255,.5)';
+        d.style.boxShadow = on ? '0 0 10px rgba(87,224,214,.9)' : 'none';
+      });
+    };
+    const update = () => {
+      const top = root.scrollTop;
+      const h = root.clientHeight;
+      const center = top + h / 2;
+      let best = 0, bestDist = Infinity;
+      steps.forEach((s, i) => {
+        const sTop = s.offsetTop, sH = s.offsetHeight;
+        const reveal = s.querySelector('[data-reveal]');
+        const inView = sTop < top + h * 0.85 && sTop + sH > top + h * 0.15;
+        if (reveal) {
+          if (inView) { reveal.style.opacity = '1'; reveal.style.transform = 'none'; }
+          else { reveal.style.opacity = '0'; reveal.style.transform = 'translateY(30px)'; }
+        }
+        const dist = Math.abs(sTop + sH / 2 - center);
+        if (dist < bestDist) { bestDist = dist; best = i; }
+      });
+      setActive(best);
+    };
+    let ticking = false;
+    this._onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { update(); ticking = false; });
+    };
+    root.addEventListener('scroll', this._onScroll, { passive: true });
+    requestAnimationFrame(update);
+    setTimeout(update, 120);
+  }
+  componentWillUnmount() { if (this._onScroll && this.root) this.root.removeEventListener('scroll', this._onScroll); }
+  renderVals() {
+    return {
+      rootRef: (el) => { this.root = el; },
+      dots: [0, 1, 2, 3, 4, 5, 6, 7],
+      reminders: [
+        'Never fill or empty the lungs completely.',
+        'Keep the diaphragm free of tension.',
+        'Let the breath become rhythmic, almost involuntary.',
+        'Always visualize the influx and the outflux.',
+        'Wave breathing can accompany all kriyas.'
+      ],
+      goTo: (e) => {
+        const t = e.target.closest('[data-dot]');
+        if (!t || !this.root) return;
+        const sec = this.root.querySelectorAll('[data-step]')[+t.dataset.dot];
+        if (sec) this.root.scrollTo({ top: sec.offsetTop, behavior: 'smooth' });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
