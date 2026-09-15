@@ -1,21 +1,17 @@
 # Wave Breathing
 
-Version-controlled baseline of the supplied Netlify deployment for Wave Breathing / Full Body Kriya.
+Static website with five chapters: Posture, Breath, Mantra, Visualization and Integration.
 
-## Project layout
+## Publish
 
-- `public/`: the complete, unchanged contents of Netlify deployment `6a3544079529297e0275f041`, including its bundled entry page, three alternate HTML versions, runtime, and image assets.
-- `reference/standalone-index.html`: the separately supplied HTML. This version references a different `project/assets/` image set that was not in the deployment ZIP; it is preserved for reference and is not published.
-- `netlify.toml`: publishes only `public/`. No build command is required for this static baseline.
+Netlify should deploy GitHub branch `main` with publish directory `public` and no build command. `public/index.html` is the current release, including all animations, wording and artwork. Commit changes to this branch to trigger publication once the repository connection is configured.
 
-## Local preview
+## Edit and preview
 
-From this folder, run `python -m http.server 5173 --directory public`, then open http://localhost:5173.
+Run `python -m http.server 5173 --directory public` and open http://localhost:5173/.
 
-## Iteration and deployment
+The Python source modules `chapter_structure.py`, `solar_spiral.py`, and `visualization_scene.py` define the chapters and custom graphics. `process_figures.py` regenerates both `public/index.html` and `public/transparent-preview.html` using Python, Pillow and NumPy. The original export used as its input is preserved in `reference/original-netlify-index.html`.
 
-Open this repository folder in Codex. Make a branch for each substantial experiment, preview locally, check all stages on desktop and mobile, and commit the verified result. Configure the existing Netlify project to deploy this repository's production branch; pull requests can use Netlify Deploy Previews.
+The generated HTML and assets are committed, so Netlify does not need Python or image libraries. Keep generator changes and generated files together in each commit.
 
-The deployed `public/index.html` is a bundled export containing embedded assets. A future source-cleanup task should unpack it into editable source while verifying visual and behavioral equivalence. This initial import deliberately preserves the working deployment.
-
-Keep generated artwork and animation assets in the repository with the code that uses them. Avoid committing credentials, temporary renders, or dependency folders.
+`public/figure-review.html` is an artwork review gallery. Original source images remain available for future edits. Do not commit credentials or local caches.
