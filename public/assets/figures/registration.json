@@ -1,0 +1,410 @@
+{
+  "seat-hands": {
+    "source": "uploads/seating seqeunce.png",
+    "crop": [
+      35,
+      120,
+      355,
+      465
+    ],
+    "method": "front-anatomical-scaffold",
+    "source_center_x": 160.5,
+    "source_y": [
+      20,
+      60,
+      100,
+      130,
+      225,
+      275,
+      325
+    ],
+    "source_half_widths": [
+      31,
+      70,
+      135
+    ],
+    "target_center_x": 512,
+    "target_y": [
+      200.0,
+      280.0,
+      365.0,
+      430.0,
+      640.0,
+      740.0,
+      846.0
+    ],
+    "target_half_widths": [
+      65.65,
+      148.24,
+      285.88
+    ]
+  },
+  "seat-shoulders": {
+    "source": "uploads/seating seqeunce.png",
+    "crop": [
+      425,
+      120,
+      745,
+      465
+    ],
+    "method": "front-anatomical-scaffold",
+    "source_center_x": 158,
+    "source_y": [
+      20,
+      60,
+      100,
+      130,
+      225,
+      275,
+      325
+    ],
+    "source_half_widths": [
+      31,
+      70,
+      137
+    ],
+    "target_center_x": 512,
+    "target_y": [
+      200.0,
+      280.0,
+      365.0,
+      430.0,
+      640.0,
+      740.0,
+      846.0
+    ],
+    "target_half_widths": [
+      65.65,
+      148.24,
+      285.88
+    ]
+  },
+  "seat-chin": {
+    "source": "uploads/seating seqeunce.png",
+    "crop": [
+      840,
+      115,
+      1100,
+      465
+    ],
+    "crown_y": 16,
+    "pelvis": [
+      78,
+      282
+    ],
+    "scale": 2.030075187969925,
+    "translate": [
+      353.65413533834584,
+      167.51879699248116
+    ],
+    "target_pelvis": [
+      512,
+      740
+    ],
+    "target_crown_y": 200
+  },
+  "seat-spine": {
+    "source": "uploads/seating seqeunce.png",
+    "crop": [
+      1205,
+      120,
+      1455,
+      465
+    ],
+    "crown_y": 19,
+    "pelvis": [
+      80,
+      277
+    ],
+    "scale": 2.0930232558139537,
+    "translate": [
+      344.5581395348837,
+      160.23255813953483
+    ],
+    "target_pelvis": [
+      512,
+      740
+    ],
+    "target_crown_y": 200
+  },
+  "seat-cushions": {
+    "source": "uploads/seating seqeunce.png",
+    "crop": [
+      60,
+      585,
+      350,
+      940
+    ],
+    "crown_y": 15,
+    "pelvis": [
+      120,
+      263
+    ],
+    "scale": 2.1774193548387095,
+    "translate": [
+      250.70967741935488,
+      167.3387096774194
+    ],
+    "target_pelvis": [
+      512,
+      740
+    ],
+    "target_crown_y": 200
+  },
+  "seat-heart": {
+    "source": "uploads/seating seqeunce.png",
+    "crop": [
+      435,
+      595,
+      740,
+      945
+    ],
+    "method": "front-anatomical-scaffold",
+    "source_center_x": 150,
+    "source_y": [
+      20,
+      60,
+      101,
+      132,
+      229,
+      283,
+      332
+    ],
+    "source_half_widths": [
+      31,
+      70,
+      133
+    ],
+    "target_center_x": 512,
+    "target_y": [
+      200.0,
+      280.0,
+      365.0,
+      430.0,
+      640.0,
+      740.0,
+      846.0
+    ],
+    "target_half_widths": [
+      65.65,
+      148.24,
+      285.88
+    ]
+  },
+  "seat-crown": {
+    "source": "uploads/seating seqeunce.png",
+    "crop": [
+      815,
+      578,
+      1120,
+      948
+    ],
+    "method": "front-anatomical-scaffold",
+    "source_center_x": 152,
+    "source_y": [
+      60,
+      100,
+      136,
+      167,
+      253,
+      303,
+      350
+    ],
+    "source_half_widths": [
+      31,
+      70,
+      135
+    ],
+    "target_center_x": 512,
+    "target_y": [
+      200.0,
+      280.0,
+      365.0,
+      430.0,
+      640.0,
+      740.0,
+      846.0
+    ],
+    "target_half_widths": [
+      65.65,
+      148.24,
+      285.88
+    ]
+  },
+  "seat-column": {
+    "source": "uploads/seating seqeunce.png",
+    "crop": [
+      1200,
+      578,
+      1480,
+      948
+    ],
+    "method": "front-anatomical-scaffold",
+    "source_center_x": 138,
+    "source_y": [
+      30,
+      70,
+      112,
+      142,
+      242,
+      299,
+      348
+    ],
+    "source_half_widths": [
+      29,
+      73,
+      138
+    ],
+    "target_center_x": 512,
+    "target_y": [
+      200.0,
+      280.0,
+      365.0,
+      430.0,
+      640.0,
+      740.0,
+      846.0
+    ],
+    "target_half_widths": [
+      65.65,
+      148.24,
+      285.88
+    ]
+  },
+  "breath-0": {
+    "source": "assets/breath-0.png",
+    "method": "front-anatomical-scaffold",
+    "source_center_x": 190,
+    "source_y": [
+      88,
+      145,
+      204,
+      246,
+      397,
+      478,
+      549
+    ],
+    "source_half_widths": [
+      45,
+      105,
+      182
+    ],
+    "target_center_x": 512,
+    "target_y": [
+      200.0,
+      280.0,
+      365.0,
+      430.0,
+      640.0,
+      740.0,
+      846.0
+    ],
+    "target_half_widths": [
+      65.65,
+      148.24,
+      285.88
+    ]
+  },
+  "breath-1": {
+    "source": "assets/breath-1.png",
+    "method": "front-anatomical-scaffold",
+    "source_center_x": 193,
+    "source_y": [
+      88,
+      145,
+      204,
+      246,
+      397,
+      478,
+      549
+    ],
+    "source_half_widths": [
+      45,
+      105,
+      182
+    ],
+    "target_center_x": 512,
+    "target_y": [
+      200.0,
+      280.0,
+      365.0,
+      430.0,
+      640.0,
+      740.0,
+      846.0
+    ],
+    "target_half_widths": [
+      65.65,
+      148.24,
+      285.88
+    ]
+  },
+  "breath-2": {
+    "source": "assets/breath-2.png",
+    "method": "front-anatomical-scaffold",
+    "source_center_x": 194,
+    "source_y": [
+      88,
+      145,
+      204,
+      246,
+      397,
+      478,
+      549
+    ],
+    "source_half_widths": [
+      45,
+      105,
+      182
+    ],
+    "target_center_x": 512,
+    "target_y": [
+      200.0,
+      280.0,
+      365.0,
+      430.0,
+      640.0,
+      740.0,
+      846.0
+    ],
+    "target_half_widths": [
+      65.65,
+      148.24,
+      285.88
+    ]
+  },
+  "breath-3": {
+    "source": "assets/breath-3.png",
+    "method": "front-anatomical-scaffold",
+    "source_center_x": 195,
+    "source_y": [
+      88,
+      145,
+      204,
+      246,
+      397,
+      478,
+      549
+    ],
+    "source_half_widths": [
+      45,
+      105,
+      182
+    ],
+    "target_center_x": 512,
+    "target_y": [
+      200.0,
+      280.0,
+      365.0,
+      430.0,
+      640.0,
+      740.0,
+      846.0
+    ],
+    "target_half_widths": [
+      65.65,
+      148.24,
+      285.88
+    ]
+  }
+}
