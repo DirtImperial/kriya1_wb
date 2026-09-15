@@ -20,7 +20,7 @@ def apply_visualization_scene(template):
     <image href="assets/visualization-landscape.png" x="-2048" y="0" width="5120" height="1024"/>
     '''+frames+'</svg></div>'
     template=template.replace('      <!-- seated posture frames (crossfade) -->',scene+'\n      <!-- seated posture frames (crossfade) -->')
-    template=template.replace("    set('landscape', (S.bg === 'mountain' || S.bg === 'finale') ? 1 : 0);", "    const visualization = this.chapterFor(s) === 4 || S.scene === 'aligned-breath';\n    set('visualization', visualization ? 1 : 0);\n    set('landscape', !visualization && (S.bg === 'mountain' || S.bg === 'finale') ? 1 : 0);")
+    template=template.replace("    set('landscape', (S.bg === 'mountain' || S.bg === 'finale') ? 1 : 0);", "    const visualization = (this.chapterFor(s) === 4 && S.bg === 'finale') || S.scene === 'aligned-breath';\n    set('visualization', visualization ? 1 : 0);\n    set('landscape', !visualization && (S.bg === 'mountain' || S.bg === 'finale') ? 1 : 0);")
     template=template.replace("set('finale', S.bg === 'finale' ? 1 : 0);", "set('finale', !visualization && S.bg === 'finale' ? 1 : 0);")
     return template
 

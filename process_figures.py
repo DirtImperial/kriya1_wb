@@ -5,6 +5,8 @@ import json, re, base64, gzip
 import numpy as np
 from chapter_structure import apply_chapters
 from solar_spiral import apply_solar_spiral
+from wave_loop import apply_wave_loop
+from mantra_scene import apply_mantra_scene
 from visualization_scene import apply_visualization_scene
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -196,6 +198,8 @@ img[alt="wave breathing cycle"]{animation:none!important;transform:none!importan
 [data-seat],[data-vfig],[data-layer="column"] img{padding:0!important;width:100%!important;height:100%!important;object-fit:contain!important;animation:none!important}
 img[alt="luminous body"]{mix-blend-mode:normal!important;animation:none!important}
 </style>'''
+template=apply_mantra_scene(template)
+template=apply_wave_loop(template)
 template=apply_solar_spiral(template)
 template=apply_visualization_scene(template)
 template=template.replace('</head>',overrides+'</head>',1)
@@ -247,6 +251,7 @@ for f in OUT.glob('*.png'):
     assert a.min()==0 and a.max()==255 and np.any((a>0)&(a<255)),f
     assert np.all(a[0]==0) and np.all(a[-1]==0) and np.all(a[:,0]==0) and np.all(a[:,-1]==0), f'clipped: {f}'
 print(f'Generated and alpha-checked {len(names)} registered figures.')
+
 
 
 
