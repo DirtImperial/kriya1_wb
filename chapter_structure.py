@@ -10,6 +10,18 @@ CHAPTERS=['Posture','Breath','Mantra','Visualization','Integration','Cultivating
 
 def apply_chapters(template):
 
+    template=template.replace("title: 'Hands rest on knees'", "title: 'Finding your seat'",1)
+    template=template.replace('Palms down, arms soft and easy.', 'Sit your body comfortably on a flat surface. Whether in a chair or cross legged it is most important to be at ease.',1)
+    hands_stage = "      { title: 'Place the hands', accent: '#9fd4ff', bg: 'stars', graphic: 'hands-down', body: 'Find a position for your hands there is no right or wrong; palms down on knees, palms up, or hands together in the lap. Let them rest and be sensitive.' },\n"
+    template=re.sub(r"(      \{[^\n]*title: 'Chin slightly down'[^\n]*\},\n)",lambda m:m.group(1)+hands_stage,template,count=1)
+    poses=[('hands-down-v2.png','Palms down on knees'),('hands-up-v1.png','Palms up on knees'),('hands-lap-v1.png','Hands resting together in the lap')]
+    frames=''
+    for i,(file,label) in enumerate(poses):
+        points=[(322,894),(925,894)] if i<2 else [(627,910)]
+        glow=''.join(f'<ellipse cx="{x}" cy="{y}" rx="75" ry="70" fill="url(#pose-glow-{i})"/>' for x,y in points)
+        frames+=f'<div class="hand-pose pose-{i}"><img src="assets/{file}" alt="{label}"/><svg viewBox="0 0 1254 1254" aria-hidden="true"><defs><radialGradient id="pose-glow-{i}"><stop stop-color="#86cfff" stop-opacity=".45"/><stop offset="1" stop-color="#518fff" stop-opacity="0"/></radialGradient></defs><g class="hands-soft-glow">{glow}</g></svg></div>'
+    template=template.replace('      <!-- seated posture frames (crossfade) -->','<div data-layer="hands-down" style="position:absolute;inset:0;opacity:0;pointer-events:none;">'+frames+'</div>\n      <!-- seated posture frames (crossfade) -->')
+    template=template.replace("    set('column', S.graphic === 'column' ? 1 : 0);", "    set('column', S.graphic === 'column' ? 1 : 0);\n    set('hands-down', S.graphic === 'hands-down' ? 1 : 0);\n    this.root.querySelector('[data-layer=\"hands-down\"]').classList.toggle('poses-active', S.graphic === 'hands-down');")
     start=template.index("      { eyebrow: 'The Spine'")
 
     end=template.index('\n    ];',start)
@@ -29,7 +41,7 @@ def apply_chapters(template):
       { title: 'Build familiarity', accent: '#57e0d6', bg: 'finale', scene: 'aligned-breath', body: 'Build your practice with the 4 anchors: Posture, Breath, Mantra and Visualization. If you become distracted always fall back on simple rhythmic breathing and work your way back up.' },
 
       { title: 'Let it become natural', accent: '#57e0d6', bg: 'finale', body: 'As the practice becomes familiar, soften the deliberate guidance. Let the rhythm become automatic, returning to an anchor whenever you need it.' },
-      { title: 'Recognizing the Root Gurus', accent: '#ffdca1', bg: 'mountain', closing: true, body: 'At the conclusion of the practice, take a moment to thank and recognize all the beings in your life who have brought you to this moment: parents, friends, and teachers. Offer special gratitude to Mahavatar Babaji and his Kriya transmissions.' }'''+template[end:]
+      { title: 'Recognizing the Root Gurus', accent: '#ffdca1', bg: 'mountain', closing: true, body: 'At the conclusion of the practice, take a moment to thank and recognize all the beings in your life who have brought you to this moment: family, friends, mentors and even those who have caused you harm. Offer special gratitude to Mahavatar Babaji and his Kriya transmissions.' }'''+template[end:]
 
     template=template.replace("      { eyebrow: 'The Breath'", "      { title: 'The empty vessel', accent: '#bcd0ff', bg: 'stars', graphic: 'vessel', still: true, body: 'Feel the outline of the body as an open vessel. Notice the space within, while the breath continues easily.' },\n" + "      { eyebrow: 'The Breath'", 1)
 
@@ -37,7 +49,7 @@ def apply_chapters(template):
 
     template=template.replace('  componentDidMount() {', '''  chapterNames = ['Posture','Breath','Mantra','Visualization','Integration','Cultivating Unconditional Love'];
 
-  chapterFor(i) { return i === 0 ? 0 : i < 8 ? 1 : i < 11 ? 2 : i < 13 ? 3 : i < 16 ? 4 : i < 19 ? 5 : 6; }
+  chapterFor(i) { return i === 0 ? 0 : i < 9 ? 1 : i < 12 ? 2 : i < 14 ? 3 : i < 17 ? 4 : i < 20 ? 5 : 6; }
 
 
 
@@ -51,7 +63,7 @@ def apply_chapters(template):
 
     template=template.replace("    this._onKey = (e) => {", "    this._onKey = (e) => {\n      if (['SELECT','INPUT','BUTTON'].includes(e.target.tagName)) return;")
 
-    template=template.replace("      onStageClick: () => this.go(this.state.stage + 1),", "      onStageClick: (e) => { if (!e.target.closest('[data-chapter-select]')) this.go(this.state.stage + 1); },\n      onChapter: (e) => { e.stopPropagation(); this.go([0,1,8,11,13,16,19][+e.target.value]); },")
+    template=template.replace("      onStageClick: () => this.go(this.state.stage + 1),", "      onStageClick: (e) => { if (!e.target.closest('[data-chapter-select]')) this.go(this.state.stage + 1); },\n      onChapter: (e) => { e.stopPropagation(); this.go([0,1,9,12,14,17,20][+e.target.value]); },")
 
     options='<option value="0">Overview</option>'+''.join(f'<option value="{i}">{i} · {name}</option>' for i,name in enumerate(CHAPTERS,1))
 
@@ -59,13 +71,34 @@ def apply_chapters(template):
 
     template=template.replace('  <!-- fullscreen toggle -->',nav+'\n  <!-- fullscreen toggle -->')
 
-    template=template.replace('hint-placeholder-count="13"','hint-placeholder-count="20"')
+    template=template.replace('hint-placeholder-count="13"','hint-placeholder-count="21"')
 
     template=re.sub(r'<button[^>]*aria-label="Toggle fullscreen".*?</button>', '', template, flags=re.S)
 
     template=template.replace('</head>', '''<style>
 
 [data-chapter-select]{color-scheme:dark}
+.hand-pose,.hand-pose img,.hand-pose svg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
+.hand-pose{opacity:0;}
+.poses-active .pose-0{animation:pose-down 15s linear infinite;}
+.poses-active .pose-1{animation:pose-up 15s linear infinite;}
+.poses-active .pose-2{animation:pose-lap 15s linear infinite;}
+@keyframes pose-down{0%,27%,100%{opacity:1;}33%,94%{opacity:0;}}
+@keyframes pose-up{0%,27%,67%,100%{opacity:0;}33%,61%{opacity:1;}}
+@keyframes pose-lap{0%,61%,100%{opacity:0;}67%,94%{opacity:1;}}
+@media(prefers-reduced-motion:reduce){.poses-active .hand-pose{animation:none;}.poses-active .pose-0{opacity:1;}}
+.hands-soft-glow{animation:hands-glow 4s ease-in-out infinite alternate;}
+@keyframes hands-glow{from{opacity:.25;}to{opacity:.75;}}
+@media(prefers-reduced-motion:reduce){.hand-pose,.hand-pose img,.hand-pose svg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
+.hand-pose{opacity:0;}
+.poses-active .pose-0{animation:pose-down 15s linear infinite;}
+.poses-active .pose-1{animation:pose-up 15s linear infinite;}
+.poses-active .pose-2{animation:pose-lap 15s linear infinite;}
+@keyframes pose-down{0%,27%,100%{opacity:1;}33%,94%{opacity:0;}}
+@keyframes pose-up{0%,27%,67%,100%{opacity:0;}33%,61%{opacity:1;}}
+@keyframes pose-lap{0%,61%,100%{opacity:0;}67%,94%{opacity:1;}}
+@media(prefers-reduced-motion:reduce){.poses-active .hand-pose{animation:none;}.poses-active .pose-0{opacity:1;}}
+.hands-soft-glow{animation:none;opacity:.45;}}
 
 [data-chapter-select]:focus-visible{outline:2px solid #8bbcff;outline-offset:3px}
 
@@ -80,7 +113,7 @@ def apply_chapters(template):
 </style>'''+'</head>',1)
 
     template=template.replace('<div data-eyebrow=""', '<div data-closing-mantra="">Om Kriya Baba Ji Namah Om</div><img data-closing-portrait="" src="assets/babaji-mountain-v1.png" alt="Mahavatar Babaji seated before the mountain"/><div data-eyebrow=""',1)
-    template=template.replace("    const s = this.state.stage, S = this.STAGES[s];", "    const s = this.state.stage, S = this.STAGES[s];\n    this.root.querySelector('[data-graphiczone]').parentElement.classList.toggle('closing-page', !!S.closing);")
+    template=template.replace("    const s = this.state.stage, S = this.STAGES[s];", "    const s = this.state.stage, S = this.STAGES[s];\n    this.root.querySelector('[data-graphiczone]').parentElement.classList.toggle('closing-page', !!S.closing);\n    this.root.querySelector('[data-graphiczone]').parentElement.style.mixBlendMode = S.graphic === 'hands-down' ? 'screen' : 'normal';")
     template=template.replace('</head>', """<style>
 [data-closing-mantra],[data-closing-portrait]{display:none;}
 .closing-page{justify-content:center;background:linear-gradient(rgba(3,5,18,.38),rgba(3,5,18,.8)),url('assets/01-landscape.png') center/cover;}

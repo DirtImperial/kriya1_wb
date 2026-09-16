@@ -30,7 +30,17 @@ def apply_solar_spiral(template):
     </svg>'''
     template=re.sub(r'<img data-seat="5"[^>]+>',
         '<div data-seat="5" style="position:absolute;inset:0;opacity:0;transition:opacity .9s ease;">'+svg+'</div>',template)
+    crown='''<svg viewBox="0 0 1024 1024" width="100%" height="100%" role="img" aria-label="A soft glow gently pulsing from the crown">
+      <defs><radialGradient id="crown-soft-light"><stop offset="0" stop-color="#decaff" stop-opacity=".65"/><stop offset=".35" stop-color="#ad8cf0" stop-opacity=".28"/><stop offset="1" stop-color="#9274dc" stop-opacity="0"/></radialGradient></defs>
+      <image href="assets/figures/seat-shoulders.png?v=4" width="1024" height="1024"/>
+      <g transform="translate(512 200)"><ellipse class="crown-soft-pulse" cy="-12" rx="90" ry="65" fill="url(#crown-soft-light)"/></g>
+    </svg>'''
+    template=re.sub(r'<img data-seat="6"[^>]+>',
+        '<div data-seat="6" style="position:absolute;inset:0;opacity:0;transition:opacity .9s ease;">'+crown+'</div>',template)
     css='''<style>
+    .crown-soft-pulse{animation:crown-soft-pulse 5s ease-in-out infinite;transform-origin:0 0}
+    @keyframes crown-soft-pulse{0%,100%{opacity:.35;transform:scale(.75)}50%{opacity:.8;transform:scale(1.15)}}
+    @media(prefers-reduced-motion:reduce){.crown-soft-pulse{animation:none;opacity:.5}}
     .solar-frame{opacity:0;animation:solar-pixel-frame 4.8s steps(1,end) infinite}
     @keyframes solar-pixel-frame{0%{opacity:1}4.166667%,100%{opacity:0}}
     @media(prefers-reduced-motion:reduce){.solar-frame{animation:none;opacity:0}.solar-frame:first-child{opacity:1}}
