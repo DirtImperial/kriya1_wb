@@ -54,6 +54,10 @@ def extract(im, gaps=(), protected=()):
     h,w=contour.shape
     seeds=[(x,0) for x in range(w)]+[(x,h-1) for x in range(w)]+[(0,y) for y in range(h)]+[(w-1,y) for y in range(h)]+list(gaps)
     solid=~reachable(~contour,seeds)
+    # Closing the outer silhouette can seal narrow arm/torso openings.
+    # Recover those dark gaps from the original contour before filling the body.
+    gap_pixels=reachable(peak<36,gaps)
+    solid[gap_pixels]=False
     if protected:
         support=Image.new('L',(w,h))
         ImageDraw.Draw(support).polygon([(x+32,y+32) for x,y in protected],fill=255)
@@ -147,7 +151,7 @@ for i in range(4):
     im=Image.open(PUBLIC/'assets'/(name+'.png')).convert('RGB')
     # Discard neighboring-panel arrow fragments without touching the figure.
     a=np.asarray(im).copy(); a[285:340,374:]=0; a[285:340,:15]=0
-    transparent=extract(Image.fromarray(a),[(91,390),(288,390)])
+    transparent=extract(Image.fromarray(a),[(105,410),(280,410)])
     aligned,landmarks=register_front(transparent,[190,193,194,195][i],
         [88,145,204,246,397,478,549],[45,105,182])
     aligned.save(OUT/(name+'.png'))
@@ -191,6 +195,13 @@ template=re.sub(r'(<img src=")[^"]+(" alt="luminous body")',
                 r'\g<1>assets/figures/breath-3.png\2',template)
 template=re.sub(r'(<img src=")[^"]+(" alt="luminous column")',
                 r'\g<1>assets/figures/seat-column.png\2',template)
+
+# A symmetric, translucent halo leaves the pixel-art spine itself untouched.
+spine_glow='''<svg viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;">
+<defs><radialGradient id="spine-side-glow"><stop offset="0" stop-color="#75baff" stop-opacity=".32"/><stop offset=".35" stop-color="#508aff" stop-opacity=".18"/><stop offset="1" stop-color="#426aff" stop-opacity="0"/></radialGradient></defs>
+<ellipse cx="512" cy="478" rx="64" ry="285" fill="url(#spine-side-glow)"/>
+</svg>'''
+template=re.sub(r'(<img[^>]+alt="luminous column"[^>]*>)',lambda m:m.group(1)+spine_glow,template)
 overrides='''<style>
 img[alt="wave breathing cycle"]{animation:none!important;transform:none!important;opacity:1!important}
 [data-layer="wavediagram"]{mix-blend-mode:normal!important}
