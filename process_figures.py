@@ -222,6 +222,7 @@ resources={e['id']:paths[e['uuid']] for e in json.loads(ext_match.group(1)) if e
 template=re.sub(r'\s+(?:integrity|crossorigin)="[^"]*"','',template)
 review=template.replace('<head>','<head><script>window.__resources='+json.dumps(resources)+';</script>',1)
 review=re.sub(r'(assets/figures/[^"?]+\.png)',r'\1?v=4',review)
+review=review.replace("<head>", "<head>"+'<title>Wave Breathing — Full Body Kriya</title>\n<meta name="description" content="A guided practice of posture, breath, mantra, visualization and integration.">\n<meta property="og:type" content="website">\n<meta property="og:title" content="Wave Breathing — Full Body Kriya">\n<meta property="og:description" content="A guided practice of posture, breath, mantra, visualization and integration.">\n<meta property="og:image" content="https://wavebreathing-kriya-v2.netlify.app/assets/share-preview-v1.png">\n<meta property="og:image:alt" content="A luminous seated figure before a mountain beneath a starry sky.">\n<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:image" content="https://wavebreathing-kriya-v2.netlify.app/assets/share-preview-v1.png">\n', 1)
 (PUBLIC/'transparent-preview.html').write_text(review,encoding='utf-8')
 (PUBLIC/'index.html').write_text(review,encoding='utf-8')
 
