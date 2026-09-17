@@ -4,7 +4,7 @@ import re
 
 
 
-CHAPTERS=['Posture','Breath','Mantra','Visualization','Integration','Cultivating Unconditional Love']
+CHAPTERS=['Posture','Breath','Mantra','Visualization','Integration','Compassion and Thanks']
 
 
 
@@ -41,13 +41,13 @@ def apply_chapters(template):
       { title: 'Build familiarity', accent: '#57e0d6', bg: 'finale', scene: 'aligned-breath', body: 'Build your practice with the 4 anchors: Posture, Breath, Mantra and Visualization. If you become distracted always fall back on simple rhythmic breathing and work your way back up.' },
 
       { title: 'Let it become natural', accent: '#57e0d6', bg: 'finale', body: 'As the practice becomes familiar, soften the deliberate guidance. Let the rhythm become automatic, returning to an anchor whenever you need it.' },
-      { title: 'Recognizing the Root Gurus', accent: '#ffdca1', bg: 'mountain', closing: true, body: 'At the conclusion of the practice, take a moment to thank and recognize all the beings in your life who have brought you to this moment: family, friends, mentors and even those who have caused you harm. Offer special gratitude to Mahavatar Babaji and his Kriya transmissions.' }'''+template[end:]
+      { title: 'Recognizing the Root Gurus', accent: '#ffdca1', bg: 'mountain', closing: true, body: 'At the end of the sit take a beat to send gratitude to all sentient beings, family, friends, mentors. Always send love to Mahavatar Babji and his line of Kriya gurus.' }'''+template[end:]
 
-    template=template.replace("      { eyebrow: 'The Breath'", "      { title: 'The empty vessel', accent: '#bcd0ff', bg: 'stars', graphic: 'vessel', still: true, body: 'Feel the outline of the body as an open vessel. Notice the space within, while the breath continues easily.' },\n" + "      { eyebrow: 'The Breath'", 1)
+    template=template.replace("      { eyebrow: 'The Breath'", "      { title: 'The empty vessel', accent: '#bcd0ff', bg: 'stars', graphic: 'empty-outline', still: true, body: 'Feel the outline of the body as an open vessel. Notice the space within, while the breath continues easily.' },\n" + "      { eyebrow: 'The Breath'", 1)
 
-    template=template.replace("eyebrow: s.eyebrow, title: s.title, body: s.body,", "eyebrow: this.state.stage === 0 ? s.eyebrow : 'Chapter ' + this.chapterFor(this.state.stage) + ' · ' + this.chapterNames[this.chapterFor(this.state.stage)-1], title: s.title, body: s.body,")
+    template=template.replace("eyebrow: s.eyebrow, title: s.title, body: s.body,", "eyebrow: this.state.stage === 0 ? s.eyebrow : 'Part ' + this.chapterFor(this.state.stage) + ' · ' + this.chapterNames[this.chapterFor(this.state.stage)-1], title: s.title, body: s.body,")
 
-    template=template.replace('  componentDidMount() {', '''  chapterNames = ['Posture','Breath','Mantra','Visualization','Integration','Cultivating Unconditional Love'];
+    template=template.replace('  componentDidMount() {', '''  chapterNames = ['Posture','Breath','Mantra','Visualization','Integration','Compassion and Thanks'];
 
   chapterFor(i) { return i === 0 ? 0 : i < 9 ? 1 : i < 12 ? 2 : i < 14 ? 3 : i < 17 ? 4 : i < 20 ? 5 : 6; }
 
@@ -67,7 +67,7 @@ def apply_chapters(template):
 
     options='<option value="0">Overview</option>'+''.join(f'<option value="{i}">{i} · {name}</option>' for i,name in enumerate(CHAPTERS,1))
 
-    nav='<select data-chapter-select="" aria-label="Chapter" onchange="{{ onChapter }}" style="position:absolute;top:16px;left:16px;z-index:25;max-width:calc(100% - 84px);padding:10px 12px;border:0;border-radius:0;background:transparent;color:#eef4ff;font:16px system-ui;cursor:pointer;">'+options+'</select>'
+    nav='<select data-chapter-select="" aria-label="Part" onchange="{{ onChapter }}" style="position:absolute;top:16px;left:16px;z-index:25;max-width:calc(100% - 84px);padding:10px 12px;border:0;border-radius:0;background:transparent;color:#eef4ff;font:16px system-ui;cursor:pointer;">'+options+'</select>'
 
     template=template.replace('  <!-- fullscreen toggle -->',nav+'\n  <!-- fullscreen toggle -->')
 
@@ -112,8 +112,8 @@ def apply_chapters(template):
 
 </style>'''+'</head>',1)
 
-    template=template.replace('<div data-eyebrow=""', '<div data-closing-mantra="">Om Kriya Baba Ji Namah Om</div><img data-closing-portrait="" src="assets/babaji-mountain-v1.png" alt="Mahavatar Babaji seated before the mountain"/><div data-eyebrow=""',1)
-    template=template.replace("    const s = this.state.stage, S = this.STAGES[s];", "    const s = this.state.stage, S = this.STAGES[s];\n    this.root.querySelector('[data-graphiczone]').parentElement.classList.toggle('closing-page', !!S.closing);\n    this.root.querySelector('[data-graphiczone]').parentElement.style.mixBlendMode = S.graphic === 'hands-down' ? 'screen' : 'normal';")
+    template=template.replace('<div data-eyebrow=""', '<div data-closing-mantra="">Om Kriya Babaji Kriya Om</div><img data-closing-portrait="" src="assets/babaji-mountain-v1.png" alt="Mahavatar Babaji seated before the mountain"/><div data-eyebrow=""',1)
+    template=template.replace("    const s = this.state.stage, S = this.STAGES[s];", "    const s = this.state.stage, S = this.STAGES[s];\n    this.root.querySelector('[data-graphiczone]').parentElement.classList.toggle('closing-page', !!S.closing);\n    this.root.querySelector('[data-graphiczone]').parentElement.classList.toggle('practice-page', s > 0 && !S.closing);\n    this.root.querySelector('[data-graphiczone]').parentElement.style.mixBlendMode = ['hands-down','empty-outline','column'].includes(S.graphic) ? 'screen' : 'normal';")
     template=template.replace('</head>', """<style>
 [data-closing-mantra],[data-closing-portrait]{display:none;}
 .closing-page{justify-content:center;background:linear-gradient(rgba(3,5,18,.38),rgba(3,5,18,.8)),url('assets/01-landscape.png') center/cover;}
@@ -124,8 +124,20 @@ def apply_chapters(template):
 .closing-page h1{font-size:clamp(1.6rem,3vw,2.5rem)!important;}
 .closing-page [data-body]{max-width:52ch!important;}
 .closing-page [data-eyebrow]{letter-spacing:.2em!important;line-height:1.6;}
-@media(max-width:600px){.closing-page [data-textzone]{gap:10px!important;}.closing-page [data-closing-mantra]{margin-bottom:0;}.closing-page [data-body]{font-size:1.12rem!important;}}
+@media(max-width:600px){.closing-page [data-textzone]{gap:10px!important;}.closing-page [data-closing-mantra]{margin-bottom:0;font-size:clamp(1rem,4.5vw,1.5rem);line-height:1.25;}.closing-page [data-body]{font-size:1.12rem!important;}}
 </style></head>""",1)
+    template=template.replace('</head>', """<style>
+@media(max-width:600px){
+.practice-page{--copy-zone:clamp(210px,38svh,290px);}
+.practice-page [data-graphiczone]{position:absolute!important;top:54px;bottom:var(--copy-zone);left:0;right:0;margin:0!important;height:auto!important;}
+.practice-page [data-textzone]{position:absolute!important;left:0;right:0;bottom:42px;height:calc(var(--copy-zone) - 42px);box-sizing:border-box;padding:10px 20px 0!important;gap:8px!important;justify-content:flex-start;}
+.practice-page h1{font-size:clamp(1.45rem,6.5vw,2rem)!important;line-height:1.1!important;margin:0!important;}
+.practice-page [data-eyebrow]{font-size:.65rem!important;letter-spacing:.22em!important;line-height:1.3!important;}
+.practice-page [data-body]{font-size:clamp(.9rem,3.8vw,1rem)!important;line-height:1.3!important;max-width:42ch!important;margin:0!important;overflow:auto;min-height:0;}
+}
+</style></head>""",1)
+    template=template.replace('      <!-- seated posture frames (crossfade) -->', '<div data-layer="empty-outline" style="position:absolute;inset:0;opacity:0;pointer-events:none;"><img src="assets/empty-vessel-outline-v2.png" alt="An airy broken outline of a seated body with a faint open interior" style="width:100%;height:100%;object-fit:contain;opacity:.9;"/></div>      <!-- seated posture frames (crossfade) -->')
+    template=template.replace("    set('column', S.graphic === 'column' ? 1 : 0);", "    set('column', S.graphic === 'column' ? 1 : 0);\n    set('empty-outline', S.graphic === 'empty-outline' ? 1 : 0);")
     return template
 
 

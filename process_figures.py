@@ -201,7 +201,12 @@ spine_glow='''<svg viewBox="0 0 1024 1024" width="100%" height="100%" aria-hidde
 <defs><radialGradient id="spine-side-glow"><stop offset="0" stop-color="#75baff" stop-opacity=".32"/><stop offset=".35" stop-color="#508aff" stop-opacity=".18"/><stop offset="1" stop-color="#426aff" stop-opacity="0"/></radialGradient></defs>
 <ellipse cx="512" cy="478" rx="64" ry="285" fill="url(#spine-side-glow)"/>
 </svg>'''
-template=re.sub(r'(<img[^>]+alt="luminous column"[^>]*>)',lambda m:m.group(1)+spine_glow,template)
+column_art='''<svg viewBox="0 0 1024 1024" width="100%" height="100%" role="img" aria-label="An open outline body with a luminous spine" style="opacity:.9;">
+<image href="assets/empty-vessel-outline-v2.png" width="1024" height="1024"/>
+<path d="M512 185V742" fill="none" stroke="#568cff" stroke-width="14" opacity=".4"/>
+<path d="M512 185V742" fill="none" stroke="#bde4ff" stroke-width="5"/>
+</svg>'''
+template=re.sub(r'<img[^>]+alt="luminous column"[^>]*>',lambda m:column_art+spine_glow,template)
 overrides='''<style>
 img[alt="wave breathing cycle"]{animation:none!important;transform:none!important;opacity:1!important}
 [data-layer="wavediagram"]{mix-blend-mode:normal!important}

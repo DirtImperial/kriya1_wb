@@ -31,13 +31,16 @@ def apply_solar_spiral(template):
     template=re.sub(r'<img data-seat="5"[^>]+>',
         '<div data-seat="5" style="position:absolute;inset:0;opacity:0;transition:opacity .9s ease;">'+svg+'</div>',template)
     crown='''<svg viewBox="0 0 1024 1024" width="100%" height="100%" role="img" aria-label="A soft glow gently pulsing from the crown">
-      <defs><radialGradient id="crown-soft-light"><stop offset="0" stop-color="#decaff" stop-opacity=".65"/><stop offset=".35" stop-color="#ad8cf0" stop-opacity=".28"/><stop offset="1" stop-color="#9274dc" stop-opacity="0"/></radialGradient></defs>
+      <defs><radialGradient id="crown-soft-light"><stop offset="0" stop-color="#decaff" stop-opacity=".65"/><stop offset=".35" stop-color="#ad8cf0" stop-opacity=".28"/><stop offset="1" stop-color="#9274dc" stop-opacity="0"/></radialGradient><linearGradient id="crown-ray" x1="0" y1="1" x2="0" y2="0"><stop stop-color="#d9c5ff" stop-opacity=".7"/><stop offset="1" stop-color="#ae95f7" stop-opacity="0"/></linearGradient></defs>
       <image href="assets/figures/seat-shoulders.png?v=4" width="1024" height="1024"/>
-      <g transform="translate(512 200)"><ellipse class="crown-soft-pulse" cy="-12" rx="90" ry="65" fill="url(#crown-soft-light)"/></g>
+      <g class="crown-rays" fill="none" stroke="url(#crown-ray)" stroke-width="4" stroke-linecap="round"><path d="M492 190 Q477 130 454 75 M502 183 Q495 110 487 45 M512 180 V32 M522 183 Q529 110 537 45 M532 190 Q547 130 570 75"/></g><g transform="translate(512 200)"><ellipse class="crown-soft-pulse" cy="-12" rx="90" ry="65" fill="url(#crown-soft-light)"/></g>
     </svg>'''
     template=re.sub(r'<img data-seat="6"[^>]+>',
         '<div data-seat="6" style="position:absolute;inset:0;opacity:0;transition:opacity .9s ease;">'+crown+'</div>',template)
     css='''<style>
+    .crown-rays{animation:crown-ray-pulse 5s ease-in-out infinite;}
+    @keyframes crown-ray-pulse{0%,100%{opacity:.4}50%{opacity:.9}}
+    @media(prefers-reduced-motion:reduce){.crown-rays{animation:none;opacity:.6}}
     .crown-soft-pulse{animation:crown-soft-pulse 5s ease-in-out infinite;transform-origin:0 0}
     @keyframes crown-soft-pulse{0%,100%{opacity:.35;transform:scale(.75)}50%{opacity:.8;transform:scale(1.15)}}
     @media(prefers-reduced-motion:reduce){.crown-soft-pulse{animation:none;opacity:.5}}
