@@ -16,7 +16,7 @@ A static guided practice: an Introduction, then six parts (Posture, Breath, Mant
 
 ## Active assets
 
-- Avatars: `public/assets/avatars/` (Man, Boy, Girl stills and all thumbnails), plus `public/assets/female-*.svg` for the Woman's breath and posture frames
+- Avatars: `public/assets/avatars/` (Man, Woman, Boy and Girl stills, and their thumbnails). `index.html` is written against `public/assets/female-*.svg`, and `chooser.js` swaps those for the chosen avatar.
 - Environments: `public/assets/environments/{grove,mountain,office}/` (day, night and thumbnails)
 - Other practice art: `public/assets/grove.svg`, `babaji-mountain-v1.png`, `mantra-arrow-original.png`, `share-preview-v1.png` (link preview)
 - Runtime and fonts: `public/assets/preview-bundle/`

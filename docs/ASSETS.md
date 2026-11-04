@@ -8,12 +8,12 @@ Roles come from searching the app files, the review page, the archived pages, th
 
 **Coordinate systems**
 
-- **Figure:** every seated figure is drawn in a 1024×1024 box. The woman's frames (`female-cloud-0..3.svg` for breath, `female-pose-0..3.svg` for posture) are SVGs that wrap embedded PNGs in a `0 0 1024 1024` viewBox.
+- **Figure:** every seated figure is drawn in a 1024×1024 box. The page markup in `index.html` refers to the original female frames (`female-cloud-0..3.svg` for breath, `female-pose-0..3.svg` for posture). These are SVGs that wrap embedded PNGs in a `0 0 1024 1024` viewBox. The browser still loads them when the page loads.
 - **Environment:** every background is 1536×1024 and opaque. The practice shows the `0 210 1536 814` window of it (`xMidYMid slice`). The figure never moves. Each environment's `stage` matrix in `environment.js` shifts or scales the background under the figure. Mirrored copies fill the edges. Mountain Sky uses scale 0.8145, offset (150.8, 75.4), which puts the peak on the third eye and the horizon through the navel. Sunlit Office uses x −140, which centers the chair.
 
 **Avatars**
 
-`chooser.js` swaps every `female-*.svg` reference for one still image, `avatars/{man,boy,girl}.png`. These are 1024×1024 RGBA and aligned to the woman's frames. The woman uses the SVG frames directly, so `avatars/woman.png` is not loaded.
+`chooser.js` (`CHARACTERS`) swaps every `female-*.svg` reference for the chosen avatar's still image, `avatars/{man,woman,boy,girl}.png`. These are 1024×1024 RGBA and aligned to the same box. All four avatars use stills, so after the swap the SVG frames are not shown.
 
 **Thumbnails**
 
@@ -27,10 +27,13 @@ Roles come from searching the app files, the review page, the archived pages, th
 ## Unresolved observations (left as found)
 
 - **Mountain night:** `environments/mountain/night.png` is byte-identical to `day.png`, and so are the two mountain thumbnails. It may be a placeholder.
-- **Woman avatar:** the woman is drawn from `female-*.svg`. `avatars/woman.png` exists but nothing references it; `avatars/thumbs/woman.png` is used.
+- **Woman avatar:** an earlier `chooser.js` drew the woman from the `female-*.svg` frames. The version in the checkpoint maps her to `avatars/woman.png`, like the others. `index.html` still loads the SVGs as base markup.
 - **Authorship:** for `reference/uploads/` and the older `public/assets/` artwork, authorship isn't recorded in the repository and is **unknown**. Four files in `reference/uploads/` named `chatgpt image may 22, 2026, …` are byte-identical to `assets/poster.png`, `assets/wave-diagram.png`, `assets/01-landscape.png` and `assets/chakra-body.png`.
 - **Unused figure:** `figures/chakra-body.png` isn't written by the current `process_figures.py` and isn't referenced.
-- **Concurrent edit:** `avatars/girl.png` and `avatars/thumbs/girl.png` were rewritten by a process outside this cleanup at 11:21 on 4 Nov 2026, after the checkpoint commit `d61dcf0`. The new versions are uncommitted in the working tree. The checkpoint holds the earlier ones.
+- **Concurrent edits:** while this cleanup ran on 4 Nov 2026, another process (an Asset Studio session) edited files here:
+  - **Before the checkpoint (included in `d61dcf0`):** `chooser.js` at 11:12, which switched the Woman to `avatars/woman.png`, and the boy avatar and its thumbnail at 11:16.
+  - **After the checkpoint (uncommitted in the working tree, not reverted):** `avatars/{girl,man,woman}.png` and `avatars/thumbs/{girl,man}.png`, between 11:21 and 11:25.
+  - **The table below** measures the files on disk at the time of writing.
 
 ## Files
 
@@ -44,7 +47,7 @@ Roles come from searching the app files, the review page, the archived pages, th
 | `avatars/thumbs/girl.png` | 15 KB | 192×192 | alpha | app: chooser.js |  |
 | `avatars/thumbs/man.png` | 22 KB | 192×192 | alpha | app: chooser.js |  |
 | `avatars/thumbs/woman.png` | 20 KB | 192×192 | alpha | app: chooser.js |  |
-| `avatars/woman.png` | 313 KB | 1024×1024 | alpha | unreferenced in the audited code |  |
+| `avatars/woman.png` | 313 KB | 1024×1024 | alpha | app: chooser.js |  |
 | `babaji-16bit-v1.png` | 1,834 KB | 1254×1254 | opaque | unreferenced in the audited code |  |
 | `babaji-mountain-v1.png` | 2,233 KB | 1254×1254 | opaque | app: index.html |  |
 | `breath-0.png` | 315 KB | 400×672 | alpha channel, fully opaque | archived: walkthrough.dc.html; legacy generator input | `preview-bundle/aa3d671f-a844-4ba6-b1e4-8f7db5ce66df.png` |
@@ -66,14 +69,14 @@ Roles come from searching the app files, the review page, the archived pages, th
 | `environments/office/night.png` | 694 KB | 1536×1024 | opaque | app: environment.js; tests |  |
 | `environments/office/thumb-day.jpg` | 13 KB | 240×160 | opaque | app: chooser.js |  |
 | `environments/office/thumb-night.jpg` | 9 KB | 240×160 | opaque | app: chooser.js |  |
-| `female-cloud-0.svg` | 1,896 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html; app: chooser.js |  |
-| `female-cloud-1.svg` | 1,896 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html |  |
-| `female-cloud-2.svg` | 1,896 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html |  |
-| `female-cloud-3.svg` | 1,896 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html |  |
-| `female-pose-0.svg` | 1,389 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html |  |
-| `female-pose-1.svg` | 1,389 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html |  |
-| `female-pose-2.svg` | 1,389 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html |  |
-| `female-pose-3.svg` | 1,389 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html |  |
+| `female-cloud-0.svg` | 1,896 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html base figure markup, replaced at runtime by chooser.js; app: chooser.js |  |
+| `female-cloud-1.svg` | 1,896 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html base figure markup, replaced at runtime by chooser.js |  |
+| `female-cloud-2.svg` | 1,896 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html base figure markup, replaced at runtime by chooser.js |  |
+| `female-cloud-3.svg` | 1,896 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html base figure markup, replaced at runtime by chooser.js |  |
+| `female-pose-0.svg` | 1,389 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html base figure markup, replaced at runtime by chooser.js |  |
+| `female-pose-1.svg` | 1,389 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html base figure markup, replaced at runtime by chooser.js |  |
+| `female-pose-2.svg` | 1,389 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html base figure markup, replaced at runtime by chooser.js |  |
+| `female-pose-3.svg` | 1,389 KB | viewBox 0 0 1024 1024 | embedded PNG | app: index.html base figure markup, replaced at runtime by chooser.js |  |
 | `figure2.png` | 373 KB | 372×548 | alpha channel, fully opaque | archived: pixel.dc.html |  |
 | `figures/breath-0.png` | 277 KB | 1024×1024 | alpha | review: figure-review.html; legacy generator output |  |
 | `figures/breath-1.png` | 299 KB | 1024×1024 | alpha | review: figure-review.html; legacy generator output |  |
