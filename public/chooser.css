@@ -1,3 +1,382 @@
-#skin-picker{position:fixed;inset:0;z-index:10000;background:#081a24;color:#f4f2e8;font:16px/1.4 system-ui;display:grid;grid-template-columns:1.15fr 1fr;overflow:auto}#skin-picker[hidden]{display:none}.skin-preview{position:relative;min-height:400px;background-size:cover;background-position:center;display:grid;place-items:center}.skin-preview:after{content:'';position:absolute;inset:0;background:linear-gradient(transparent,#081a2477)}.skin-preview img{position:relative;z-index:1;width:min(95%,580px);height:auto}.skin-label{position:absolute;bottom:30px;left:30px;z-index:2;font-size:12px;letter-spacing:3px;text-transform:uppercase}.skin-options{padding:clamp(24px,5vw,64px);align-self:center}.skin-options small{letter-spacing:3px;color:#a8cfc8;font-size:10px}.skin-options h1{font-size:clamp(28px,4vw,46px);line-height:1.1;margin:12px 0}.skin-options p{color:#bdcbd0;font-size:14px;margin:0 0 30px}.skin-options fieldset{border:0;padding:0;margin:25px 0}.skin-options legend{font-size:12px;letter-spacing:2px;margin-bottom:10px}.skin-row{display:flex;gap:10px}.skin-row button{flex:1;background:#122d39;border:1px solid #31505c;border-radius:12px;color:#e7edef;padding:15px 10px;cursor:pointer;font:inherit}.skin-row button[aria-pressed=true]{border-color:#bee9d5;background:#264b4e;box-shadow:inset 0 0 0 1px #bee9d5}.skin-options button:focus-visible,#skin-reopen:focus-visible{outline:3px solid #ffe4a5;outline-offset:3px}#skin-begin{width:100%;border:0;border-radius:30px;background:#e7efd2;color:#18352e;font:600 16px system-ui;padding:16px;cursor:pointer;margin-top:12px}#skin-reopen{position:fixed;right:16px;top:15px;z-index:999;color:#f7f6ed;background:#09202bcc;border:1px solid #aec2c766;border-radius:20px;padding:8px 13px;font:12px system-ui;cursor:pointer}
-html[data-environment=mountain] .grove-world{background:linear-gradient(#07132155,#071321bb),url('assets/01-landscape.png') center/cover}html[data-environment=mountain] .grove-world svg{visibility:hidden}
-@media(max-width:650px){#skin-picker{grid-template-columns:1fr;grid-template-rows:34svh auto}.skin-preview{min-height:0}.skin-preview img{height:34svh;width:auto;max-width:100%;object-fit:contain}.skin-label{bottom:14px;left:20px;font-size:10px}.skin-options{padding:22px 24px}.skin-options h1{font-size:30px}.skin-options p{margin-bottom:18px}.skin-options fieldset{margin:18px 0}.skin-row button{padding:11px}.skin-options legend{margin-bottom:8px}}
+/* Intro / appearance sheet. The scene and figure use the practice's own geometry
+   (--grove-y / --grove-box from index.html), so the figure stays exactly in place when
+   the practice begins. The words and choices sit around it: a frosted sheet along the
+   bottom on phones and narrow screens, a side panel on wide ones. */
+
+#skin-picker {
+  --skin-glass: rgba(10, 26, 34, 0.6);
+  --skin-glass-line: rgba(214, 236, 230, 0.16);
+  --skin-tile: rgba(244, 241, 232, 0.06);
+  --skin-tile-hover: rgba(244, 241, 232, 0.12);
+  --skin-ring: #bee9d5;
+  --skin-soft: #a8cfc8;
+  --skin-halo: rgba(158, 231, 220, 0.3);
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow: hidden;
+  background: #10242c;
+  color: var(--wb-ink, #f4f1e8);
+  font: 16px/1.5 'Space Grotesk', sans-serif;
+}
+
+#skin-picker[data-time="day"] { --skin-halo: rgba(255, 238, 196, 0.34); }
+
+/* Scene and figure */
+
+.skin-world {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.skin-world svg { display: block; }
+
+#skin-picker::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(7, 18, 26, 0) 55%, rgba(7, 18, 26, 0.7) 78%, rgba(7, 18, 26, 0.92) 100%);
+}
+
+.skin-stage {
+  position: fixed;
+  top: var(--grove-y);
+  left: 50%;
+  width: var(--grove-box);
+  height: var(--grove-box);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.skin-figure {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.skin-halo {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  width: 78%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--skin-halo) 0%, rgba(158, 231, 220, 0) 66%);
+  transform: translate(-50%, -50%) scale(0.86);
+  animation: skin-breathe 10s ease-in-out infinite;
+}
+
+/* 4s in, 6s out: the same slow wave the practice teaches. */
+@keyframes skin-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.86); opacity: 0.65; }
+  40% { transform: translate(-50%, -50%) scale(1.04); opacity: 1; }
+}
+
+/* Words and choices: bottom sheet by default */
+
+.skin-options {
+  position: fixed;
+  z-index: 2;
+  left: 50%;
+  bottom: 0;
+  width: min(640px, 100%);
+  max-height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  transform: translateX(-50%);
+  padding: 0 12px calc(12px + env(safe-area-inset-bottom));
+  animation: skin-rise 1.1s 0.1s ease-out both;
+}
+
+@keyframes skin-rise {
+  from { opacity: 0; translate: 0 14px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+/* Leaving: the choices sink first, then the scene dissolves into the practice. */
+#skin-picker.is-leaving {
+  pointer-events: none;
+  animation: skin-leave 0.75s 0.15s ease-in-out both;
+}
+
+#skin-picker.is-leaving .skin-options { animation: skin-sink 0.45s ease-in both; }
+
+@keyframes skin-leave {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes skin-sink {
+  from { opacity: 1; translate: 0 0; }
+  to { opacity: 0; translate: 0 18px; }
+}
+
+.skin-panel {
+  padding: 16px 16px 14px;
+  background: var(--skin-glass);
+  border: 1px solid var(--skin-glass-line);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(2, 8, 14, 0.35);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  backdrop-filter: blur(18px) saturate(1.1);
+}
+
+.skin-head { text-align: center; margin-bottom: 12px; }
+
+.skin-head small {
+  display: block;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--skin-soft);
+  font-size: 10px;
+}
+
+.skin-head h1 {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 300;
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 6px 0 4px;
+  text-wrap: balance;
+}
+
+.skin-head h1:focus { outline: none; }
+
+.skin-head p {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 300;
+  color: #d5e2e6;
+  font-size: 1rem;
+  line-height: 1.35;
+  margin: 0 auto;
+  max-width: 36ch;
+  text-wrap: balance;
+}
+
+.skin-greeting { font-style: italic; color: var(--wb-ink, #f4f1e8); }
+
+.skin-sheet fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0 0 12px;
+  min-width: 0;
+}
+
+.skin-sheet legend {
+  padding: 0;
+  margin: 0 0 8px;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--skin-soft);
+}
+
+/* Place tiles */
+
+.skin-places {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.skin-place {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  min-height: 0;
+  padding: 4px 4px 6px;
+  color: var(--wb-ink, #f4f1e8);
+  font: 500 0.68rem/1.15 'Space Grotesk', sans-serif;
+  text-align: center;
+  background: var(--skin-tile);
+  border: 1px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.skin-place img {
+  flex: none;
+  width: 100%;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 10px;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.skin-place span { min-width: 0; max-width: 100%; }
+
+/* Avatar discs */
+
+.skin-avatars {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.skin-avatar {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 2px 0;
+  color: var(--wb-muted, #d5e2e6);
+  font: 500 0.8rem/1.2 'Space Grotesk', sans-serif;
+  background: none;
+  border: 0;
+  border-radius: 16px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.skin-avatar-disc {
+  display: grid;
+  place-items: center;
+  width: min(56px, 100%);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, rgba(158, 231, 220, 0.16), rgba(244, 241, 232, 0.05) 70%);
+  box-shadow: inset 0 0 0 1px rgba(214, 236, 230, 0.14);
+  transition: box-shadow 0.3s ease, background 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+}
+
+.skin-avatar:hover .skin-avatar-disc { transform: scale(1.04); }
+.skin-avatar[aria-pressed="true"] .skin-avatar-disc { transform: scale(1.06); }
+.skin-avatar:active .skin-avatar-disc { transform: scale(0.97); }
+
+.skin-avatar-disc img {
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.skin-place:hover { background: var(--skin-tile-hover); }
+.skin-avatar:hover .skin-avatar-disc { background: radial-gradient(circle at 50% 40%, rgba(158, 231, 220, 0.24), rgba(244, 241, 232, 0.08) 70%); }
+
+.skin-place[aria-pressed="true"] {
+  background: rgba(190, 233, 213, 0.14);
+  border-color: var(--skin-ring);
+}
+
+.skin-avatar[aria-pressed="true"] { color: var(--wb-ink, #f4f1e8); }
+
+.skin-avatar[aria-pressed="true"] .skin-avatar-disc {
+  background: radial-gradient(circle at 50% 40%, rgba(158, 231, 220, 0.34), rgba(38, 75, 78, 0.6) 72%);
+  box-shadow: inset 0 0 0 2px var(--skin-ring), 0 0 18px rgba(158, 231, 220, 0.28);
+}
+
+.skin-place:focus-visible,
+.skin-avatar:focus-visible {
+  outline: 3px solid var(--wb-gold, #ffe4a5);
+  outline-offset: 3px;
+}
+
+/* Actions */
+
+.skin-actions { display: flex; gap: 10px; }
+.skin-actions .wb-button { flex: 1 1 0; border-radius: 999px; min-height: 46px; }
+
+#skin-picker .wb-button-primary {
+  box-shadow: 0 0 0 1px rgba(213, 226, 184, 0.6), 0 10px 30px rgba(231, 239, 210, 0.18);
+  letter-spacing: 0.02em;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+#skin-picker .wb-button-primary:hover { box-shadow: 0 0 0 1px rgba(213, 226, 184, 0.8), 0 10px 36px rgba(231, 239, 210, 0.3); }
+#skin-picker .wb-button-primary:active { box-shadow: 0 0 0 1px rgba(213, 226, 184, 0.8); }
+#skin-picker .wb-button-secondary { background: rgba(244, 241, 232, 0.06); }
+
+/* Wider bottom sheet: place and avatars side by side. */
+@media (min-width: 640px) {
+  .skin-sheet {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    column-gap: 16px;
+  }
+  .skin-places { grid-template-columns: 1fr; gap: 6px; }
+  .skin-place {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 8px;
+    min-height: 44px;
+    padding: 4px 10px 4px 4px;
+    font-size: 0.88rem;
+    line-height: 1.2;
+  }
+  .skin-place img { width: 44px; height: 32px; }
+  .skin-actions { grid-column: 1 / -1; }
+}
+
+/* The bottom sheet stays compact so it covers no more of the figure than the
+   practice's own text does: just the heading and the choices. */
+@media not ((min-width: 960px) and (min-aspect-ratio: 7/5)) {
+  .skin-panel { padding: 12px 12px 12px; }
+  .skin-head { margin-bottom: 10px; }
+  .skin-head small,
+  .skin-intro { display: none; }
+  .skin-head h1 { font-size: 22px; margin: 0; }
+  .skin-sheet legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .skin-sheet fieldset { margin-bottom: 10px; }
+  .skin-place { min-height: 0; }
+  .skin-place img { height: 32px; }
+  .skin-avatar-disc { width: min(46px, 100%); }
+  .skin-actions .wb-button { min-height: 44px; }
+}
+
+/* Wide screens: a side panel to the right of the figure. */
+@media (min-width: 960px) and (min-aspect-ratio: 7/5) {
+  #skin-picker::after {
+    background: linear-gradient(90deg, rgba(7, 18, 26, 0) 55%, rgba(7, 18, 26, 0.55) 100%);
+  }
+  .skin-options {
+    left: auto;
+    right: max(24px, 4vw);
+    top: 50%;
+    bottom: auto;
+    width: clamp(320px, 28vw, 420px);
+    max-height: calc(100% - 48px);
+    padding: 0;
+    transform: translateY(-50%);
+  }
+  .skin-panel { padding: 24px 22px 20px; }
+  .skin-head { text-align: left; margin-bottom: 18px; }
+  .skin-head small { font-size: 11px; }
+  .skin-head h1 { font-size: clamp(28px, 2.6vw, 38px); margin: 10px 0 8px; }
+  .skin-head p { margin: 0; font-size: 1.08rem; }
+  .skin-greeting { display: block; }
+  .skin-sheet { display: block; }
+  .skin-sheet fieldset { margin-bottom: 16px; }
+  .skin-places { grid-template-columns: 1fr; gap: 8px; }
+  .skin-place { min-height: 48px; font-size: 0.92rem; }
+  .skin-place img { width: 56px; height: 40px; }
+  .skin-avatar-disc { width: min(64px, 100%); }
+  .skin-actions .wb-button { min-height: 50px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skin-options,
+  .skin-halo { animation: none; }
+  .skin-avatar-disc { transition: none; transform: none !important; }
+}

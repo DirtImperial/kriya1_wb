@@ -1,0 +1,794 @@
+/* Provisional interface tokens. Art direction is still open; these are easy to retune.
+   Progress is one navigator: the current part and step above six equal sections
+   that fill with acknowledged instructions, the current part tinted. The whole navigator is one
+   button that opens the session overview, a bottom sheet where a part heading
+   expands and a step jumps. */
+
+:root {
+  --wb-ink: #f4f1e8;
+  --wb-muted: #c9d8dc;
+  --wb-deep: #10242c;
+  --wb-plate: rgba(6, 16, 24, 0.92);
+  --wb-sheet: #0c1d25;
+  --wb-line: rgba(190, 220, 214, 0.45);
+  --wb-hairline: rgba(190, 220, 214, 0.16);
+  --wb-track: rgba(244, 241, 232, 0.2);
+  --wb-accent: #9ee7dc;
+  --wb-gold: #ffe4a5;
+  --wb-primary: #e7efd2;
+  --wb-primary-ink: #17352e;
+  --wb-shadow: #1a3f3c;
+  --wb-radius: 8px;
+  --wb-fill-time: 0.2s;
+}
+
+#skin-picker[hidden],
+#skin-reopen[hidden],
+#skin-begin[hidden],
+#skin-cancel[hidden],
+#skin-apply[hidden],
+.skin-intro[hidden],
+.skin-settings-note[hidden] { display: none !important; }
+
+.wb-sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.wb-root {
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+  user-select: none;
+}
+
+.wb-root ::selection { background: rgba(158, 231, 220, 0.35); color: #fff; }
+
+.wb-practice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* The scene is clickable. The words and the controls keep their own pointer. */
+.wb-practice [data-graphiczone] { pointer-events: auto; }
+
+.wb-practice [data-textzone],
+.wb-practice .wb-bar,
+.wb-practice .wb-sheet,
+.wb-practice .wb-complete {
+  cursor: auto;
+}
+
+.wb-stage {
+  position: relative !important;
+  inset: auto !important;
+  order: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  z-index: 10;
+}
+
+/* ===== Buttons ===== */
+
+.wb-button,
+.wb-choice {
+  appearance: none;
+  font: 600 1rem/1.2 'Space Grotesk', sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+  border-radius: var(--wb-radius);
+}
+
+/* Buttons share the opening sheet's language: pills with a soft glow. */
+.wb-button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+}
+
+.wb-button:active:not(:disabled) { transform: scale(0.97); }
+
+.wb-button-block { width: 100%; }
+
+.wb-button-primary {
+  background: var(--wb-primary);
+  color: var(--wb-primary-ink);
+  border-color: #d5e2b8;
+  box-shadow: 0 0 0 1px rgba(213, 226, 184, 0.6), 0 8px 24px rgba(231, 239, 210, 0.14);
+  letter-spacing: 0.02em;
+}
+
+.wb-button-primary:hover { background: #f4f7e6; box-shadow: 0 0 0 1px rgba(213, 226, 184, 0.8), 0 8px 30px rgba(231, 239, 210, 0.28); }
+.wb-button-primary:active { background: #dde6c4; box-shadow: 0 0 0 1px rgba(213, 226, 184, 0.8); }
+
+.wb-button-secondary,
+.wb-button-quiet {
+  background: rgba(8, 22, 32, 0.88);
+  color: var(--wb-ink);
+  border-color: var(--wb-line);
+}
+
+.wb-button-secondary:hover,
+.wb-button-quiet:hover,
+.wb-choice:hover { background: rgba(28, 58, 66, 0.95); }
+
+.wb-button-secondary:active,
+.wb-button-quiet:active,
+.wb-choice:active { background: rgba(16, 40, 48, 1); }
+
+.wb-button:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.wb-choice {
+  flex: 1 1 0;
+  min-height: 48px;
+  padding: 12px 10px;
+  color: var(--wb-ink);
+  background: rgba(16, 36, 44, 0.72);
+  border: 1px solid rgba(168, 207, 200, 0.35);
+}
+
+.wb-choice[aria-pressed="true"] {
+  border-color: #bee9d5;
+  background: #264b4e;
+  box-shadow: inset 0 0 0 1px #bee9d5;
+}
+
+/* Headings take focus only to give a jump a destination. */
+#wb-complete-title:focus,
+#wb-sheet-title:focus,
+[data-heading]:focus { outline: none; }
+
+.wb-button:focus-visible,
+.wb-choice:focus-visible,
+.skin-avatar:focus-visible,
+.wb-nav:focus-visible,
+.wb-sheet-close:focus-visible,
+.wb-map-part:focus-visible,
+.wb-map-step:focus-visible,
+#wb-complete-title:focus-visible {
+  outline: 3px solid var(--wb-gold);
+  outline-offset: 3px;
+}
+
+#skin-reopen {
+  position: fixed;
+  z-index: 80;
+  top: max(8px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+}
+
+/* On Finish the words and controls fade away and leave the scene. */
+.wb-stage,
+.wb-bar { transition: opacity 0.9s ease, visibility 0s; }
+
+.wb-root[data-done="true"] .wb-stage,
+.wb-root[data-done="true"] .wb-bar {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.9s ease, visibility 0s 0.9s;
+}
+
+/* ===== Instruction copy ===== */
+
+/* The copy sits on the same quiet plate as the navigator, directly above it.
+   The footer is a sibling in the flow, so the stage (and this zone) ends where
+   the footer begins and can never sit underneath it. Long copy scrolls here. */
+.practice-page [data-textzone] {
+  position: absolute !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: auto !important;
+  bottom: 0 !important;
+  height: auto !important;
+  max-height: 48% !important;
+  overflow: auto !important;
+  z-index: 12;
+  margin: 0 !important;
+  padding: 32px max(20px, env(safe-area-inset-right)) 16px max(20px, env(safe-area-inset-left)) !important;
+  gap: 10px !important;
+  pointer-events: auto;
+  user-select: text;
+  -webkit-user-select: text;
+  background: linear-gradient(180deg, rgba(6, 16, 24, 0) 0%, var(--wb-plate) 32px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244, 241, 232, 0.4) transparent;
+}
+
+.practice-page [data-textzone]::-webkit-scrollbar { width: 8px; height: 8px; }
+.practice-page [data-textzone]::-webkit-scrollbar-thumb { background: rgba(244, 241, 232, 0.4); border-radius: 8px; }
+
+.practice-page h1 {
+  font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.4rem) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.015em !important;
+  max-width: 24ch;
+}
+
+/* Reserve three lines of instruction so the title stays put from step to step.
+   Longer instructions still lift it. */
+.practice-page [data-body] {
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-size: clamp(1.05rem, 0.9rem + 0.5vw, 1.2rem) !important;
+  line-height: 1.5 !important;
+  max-width: 52ch !important;
+  min-height: 4.5em;
+  color: rgba(244, 241, 232, 0.9) !important;
+  overflow: visible !important;
+}
+
+/* These layers had no transition, so they cut in while their neighbours faded. */
+[data-layer="hands-down"],
+[data-layer="empty-outline"],
+[data-layer="mantra-body"],
+[data-layer="visualization"] { transition: opacity 1s ease; }
+
+.practice-page [data-body],
+.practice-page h1,
+.intro-page [data-textzone],
+.closing-page [data-textzone] {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.closing-page.wb-stage,
+.intro-page.wb-stage { overflow: auto; }
+
+.closing-page [data-textzone],
+.intro-page [data-textzone] { padding-bottom: 16px !important; }
+
+@media (max-height: 760px) {
+  .closing-page [data-textzone] {
+    padding: 8px 16px 8px !important;
+    gap: 6px !important;
+  }
+  .closing-page [data-closing-portrait] { height: 128px !important; }
+  .closing-page [data-closing-mantra] { font-size: 1.15rem !important; }
+  .closing-page h1 { font-size: 1.4rem !important; }
+  .closing-page [data-body] { font-size: 1rem !important; }
+}
+
+/* ===== Footer: navigator, Back, primary action ===== */
+
+.wb-bar {
+  position: relative;
+  z-index: 30;
+  order: 2;
+  flex: none;
+  container: wb-bar / inline-size;
+  padding: 6px max(16px, env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  background: var(--wb-plate);
+}
+
+/* Narrow by default: navigator on its own row, Back and Continue below it. */
+.wb-bar-inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "nav nav nav"
+    "back caption forward";
+  gap: 8px 10px;
+  align-items: center;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.wb-bar [data-back] { grid-area: back; justify-self: start; }
+.wb-bar [data-forward] { grid-area: forward; justify-self: end; }
+
+.wb-next-caption {
+  grid-area: caption;
+  justify-self: end;
+  text-align: right;
+  font: 500 0.85rem/1.25 'Space Grotesk', sans-serif;
+  color: var(--wb-muted);
+  text-wrap: balance;
+}
+
+.wb-fwd-long { display: none; }
+
+/* One focal point: the current part and step, centred above a quiet track.
+   The other part names live in the session overview (the chevron opens it),
+   so the footer never asks to be read while someone is practising. */
+.wb-nav {
+  grid-area: nav;
+  justify-self: center;
+  appearance: none;
+  display: grid;
+  gap: 10px;
+  width: min(100%, 560px);
+  min-width: 0;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 14px 12px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--wb-ink);
+  font: 400 1rem/1.25 'Space Grotesk', sans-serif;
+  text-align: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color var(--wb-fill-time) ease, border-color var(--wb-fill-time) ease;
+}
+
+.wb-nav:hover,
+.wb-nav:focus-visible,
+.wb-nav[aria-expanded="true"] {
+  background: rgba(158, 231, 220, 0.07);
+  border-color: var(--wb-hairline);
+}
+
+.wb-nav-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.wb-nav-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.wb-nav-step {
+  color: var(--wb-muted);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  opacity: 0.8;
+}
+
+.wb-nav-step:empty { display: none; }
+
+.wb-nav-cue {
+  flex: none;
+  align-self: center;
+  display: inline-flex;
+  color: var(--wb-muted);
+  opacity: 0.7;
+  transition: opacity var(--wb-fill-time) ease, color var(--wb-fill-time) ease;
+}
+
+.wb-nav:hover .wb-nav-cue,
+.wb-nav:focus-visible .wb-nav-cue,
+.wb-nav[aria-expanded="true"] .wb-nav-cue { opacity: 1; color: var(--wb-accent); }
+
+.wb-nav-cue svg { width: 12px; height: 12px; }
+
+.wb-tracks {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.wb-seg { display: block; min-width: 0; }
+
+.wb-track {
+  display: block;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(244, 241, 232, 0.12);
+  overflow: hidden;
+}
+
+/* The current part is a brighter tint of the track, never an outline or pulse. */
+.wb-seg[data-current="true"] .wb-track { background: rgba(158, 231, 220, 0.3); }
+
+.wb-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--wb-accent);
+  transition: width var(--wb-fill-time) ease-out;
+}
+
+/* Back is the way out, not the way on: a quiet ghost beside the primary. */
+.wb-bar [data-back] {
+  background: transparent;
+  border-color: transparent;
+  color: var(--wb-muted);
+}
+
+.wb-bar [data-back]:hover:not(:disabled) {
+  background: rgba(158, 231, 220, 0.07);
+  color: var(--wb-ink);
+}
+
+/* Medium: the boundary action names the next part. */
+@container wb-bar (min-width: 720px) {
+  .wb-next-caption { display: none; }
+  .wb-fwd-long { display: inline; }
+  .wb-fwd-short { display: none; }
+}
+
+/* Wide: Back, navigator and action share one row. Equal side columns keep the
+   navigator centred and the action in place whatever its label says. */
+@container wb-bar (min-width: 1280px) {
+  .wb-bar-inner {
+    grid-template-columns: 17.5rem minmax(0, 1fr) 17.5rem;
+    grid-template-areas: "back nav forward";
+    gap: 0 24px;
+  }
+}
+
+/* Short landscape screens: one row, so the copy keeps its height. */
+@media (max-height: 520px) {
+  @container wb-bar (min-width: 600px) {
+    .wb-bar-inner {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-areas: "back nav forward";
+      gap: 0 16px;
+    }
+    .wb-nav { padding: 6px 12px 8px; gap: 6px; }
+    .wb-next-caption { display: none; }
+    .wb-fwd-long { display: inline; }
+    .wb-fwd-short { display: none; }
+  }
+  .practice-page [data-textzone] { max-height: 66% !important; padding-top: 20px !important; }
+  .practice-page [data-body] { min-height: 0; }
+}
+
+/* ===== Session overview (bottom sheet) ===== */
+
+/* margin-top: auto undoes the page's global reset and seats the sheet on the
+   bottom edge, right above the navigator it came from. */
+.wb-sheet {
+  width: min(560px, 100%);
+  max-width: 100%;
+  max-height: min(82dvh, 760px);
+  margin: auto auto 0;
+  padding: 0 0 env(safe-area-inset-bottom);
+  border: 1px solid var(--wb-hairline);
+  border-bottom: 0;
+  border-radius: 20px 20px 0 0;
+  background: var(--wb-sheet);
+  color: var(--wb-ink);
+  font-family: 'Space Grotesk', sans-serif;
+  box-shadow: 0 -18px 48px rgba(2, 8, 14, 0.45);
+  overflow: hidden;
+}
+
+.wb-sheet[open] {
+  display: flex;
+  flex-direction: column;
+  animation: wb-sheet-in 0.22s ease-out;
+}
+
+.wb-sheet::backdrop {
+  background: rgba(4, 10, 16, 0.55);
+  animation: wb-fade-in 0.22s ease-out;
+}
+
+@keyframes wb-sheet-in {
+  from { transform: translateY(24px); }
+  to { transform: none; }
+}
+
+@keyframes wb-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.wb-sheet-head {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 14px 14px 22px;
+  border-bottom: 1px solid var(--wb-hairline);
+}
+
+.wb-sheet-head h2 {
+  margin: 0;
+  font: 600 1.35rem/1.2 'Space Grotesk', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.wb-sheet-where {
+  margin: 4px 0 0;
+  color: var(--wb-muted);
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.wb-sheet-close {
+  flex: none;
+  appearance: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -6px 0 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--wb-ink);
+  cursor: pointer;
+}
+
+.wb-sheet-close:hover { background: rgba(244, 241, 232, 0.08); border-color: var(--wb-hairline); }
+.wb-sheet-close svg { width: 16px; height: 16px; }
+
+.wb-sheet-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 8px 12px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244, 241, 232, 0.35) transparent;
+}
+
+.wb-sheet-foot {
+  flex: none;
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 18px 14px;
+  border-top: 1px solid var(--wb-hairline);
+}
+
+.wb-map-heading { margin: 0; font: inherit; }
+
+.wb-map-part,
+.wb-map-step {
+  appearance: none;
+  width: 100%;
+  margin: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--wb-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color var(--wb-fill-time) ease, border-color var(--wb-fill-time) ease;
+}
+
+.wb-map-part {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.wb-map-part:hover,
+.wb-map-step:hover { background: rgba(244, 241, 232, 0.06); }
+
+.wb-map-text { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; min-width: 0; }
+.wb-map-name { font-weight: 600; font-size: 1.05rem; }
+.wb-map-meta { color: var(--wb-muted); font-size: 0.875rem; }
+.wb-map-part[data-state="done"] .wb-map-meta { color: var(--wb-accent); }
+
+.wb-map-chevron { width: 14px; height: 14px; color: var(--wb-muted); transition: transform var(--wb-fill-time) ease; }
+.wb-map-part[aria-expanded="true"] .wb-map-chevron { transform: rotate(180deg); }
+
+/* Node: hollow upcoming, half-filled partial, filled with a check when done.
+   The current part adds a ring outside the node. */
+.wb-map-node {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(244, 241, 232, 0.45);
+}
+
+.wb-map-part[data-state="partial"] .wb-map-node {
+  border-color: var(--wb-accent);
+  background: linear-gradient(90deg, var(--wb-accent) 50%, transparent 50%);
+}
+
+.wb-map-part[data-state="done"] .wb-map-node { border-color: var(--wb-accent); background: var(--wb-accent); }
+
+.wb-map-part[data-state="done"] .wb-map-node::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0;
+  width: 3px;
+  height: 7px;
+  border: solid var(--wb-primary-ink);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.wb-map-part[data-current="true"] .wb-map-node { box-shadow: 0 0 0 3px var(--wb-sheet), 0 0 0 4px var(--wb-accent); }
+.wb-map-part[data-current="true"] { background: rgba(158, 231, 220, 0.06); }
+
+.wb-map-steps {
+  list-style: none;
+  margin: 2px 0 8px;
+  padding: 0 0 0 20px;
+  display: grid;
+  gap: 2px;
+}
+
+.wb-map-steps > li { margin: 0; }
+
+.wb-map-step {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  min-height: 48px;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.wb-map-num {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 241, 232, 0.35);
+  color: var(--wb-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.wb-map-step[data-acked="true"] .wb-map-num { border-color: var(--wb-accent); background: var(--wb-accent); color: var(--wb-primary-ink); }
+
+.wb-map-step-text { display: grid; gap: 2px; padding-top: 2px; }
+.wb-map-step-title { font-size: 1rem; line-height: 1.3; }
+.wb-map-excerpt { color: var(--wb-muted); font-size: 0.85rem; line-height: 1.35; }
+.wb-map-excerpt:empty,
+.wb-map-here:empty { display: none; }
+.wb-map-here { color: var(--wb-accent); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.02em; }
+
+.wb-map-step[aria-current="step"] {
+  background: rgba(158, 231, 220, 0.1);
+  border-color: rgba(158, 231, 220, 0.55);
+}
+
+.wb-map-step[aria-current="step"] .wb-map-step-title { font-weight: 600; }
+
+/* ===== Completion card ===== */
+
+.wb-card {
+  background: rgba(10, 24, 32, 0.86);
+  color: var(--wb-ink);
+  border: 1px solid rgba(214, 236, 230, 0.16);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(2, 8, 14, 0.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  backdrop-filter: blur(18px) saturate(1.1);
+  padding: 22px 18px 18px;
+}
+
+.wb-card h2 {
+  margin: 0 0 6px;
+  font: 600 clamp(1.5rem, 3vw, 2rem)/1.15 'Space Grotesk', sans-serif;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.wb-complete-copy {
+  margin: 0 0 16px;
+  color: var(--wb-muted);
+  font: 400 1.02rem/1.45 'Space Grotesk', sans-serif;
+}
+
+.wb-complete {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 76px 16px 24px;
+  overflow: auto;
+  background: rgba(6, 16, 24, 0.5);
+  pointer-events: none;
+  animation: wb-fade-in 1.6s ease both;
+}
+
+/* A halo breathes behind the card on the same 4s-in, 6s-out wave as the opening. */
+.wb-complete::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(92vmin, 680px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(158, 231, 220, 0.2) 0%, rgba(158, 231, 220, 0) 66%);
+  transform: translate(-50%, -50%) scale(0.86);
+  animation: wb-halo 10s 0.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes wb-halo {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.86); opacity: 0.6; }
+  40% { transform: translate(-50%, -50%) scale(1.04); opacity: 1; }
+}
+
+.wb-complete-card {
+  position: relative;
+  pointer-events: auto;
+  width: min(100%, 440px);
+  text-align: center;
+  animation: wb-card-rise 0.9s 0.8s ease-out both;
+}
+
+@keyframes wb-card-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+.wb-proposed {
+  margin: 0 0 10px;
+  color: var(--wb-gold);
+  font: 600 0.8rem/1.3 'Space Grotesk', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wb-complete-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.wb-complete-actions .wb-button { min-width: 148px; }
+
+@media (max-width: 700px) {
+  .practice-page [data-textzone] { max-height: 46svh !important; padding-top: 24px !important; }
+}
+
+@media (max-width: 420px) {
+  .wb-complete { padding-top: 68px; }
+  .wb-complete-actions { flex-direction: column; }
+  .wb-complete-actions .wb-button { width: 100%; }
+  .wb-sheet-foot .wb-button { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wb-button,
+  .wb-choice,
+  .wb-nav,
+  .wb-fill,
+  .wb-map-part,
+  .wb-map-step,
+  .wb-map-chevron,
+  .wb-card,
+  .wb-complete,
+  .wb-complete::before,
+  .wb-complete-card,
+  .wb-sheet,
+  .wb-sheet::backdrop,
+  .wb-stage,
+  .wb-bar {
+    transition: none !important;
+    animation: none !important;
+  }
+}
