@@ -1,8 +1,5 @@
 [build]
-  # The practice is already the publish directory. This overrides a dashboard
-  # build command so preview deploys do not try to run a missing build.
-  command = "true"
   publish = "public"
-
-[build.processing]
-  skip_processing = true
+  # Keep the repo root as the base so a dashboard base directory cannot
+  # make the publish path resolve to a folder that does not exist.
+  base = "."
