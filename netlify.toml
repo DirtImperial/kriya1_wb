@@ -1,2 +1,8 @@
 [build]
+  # The practice is already the publish directory. This overrides a dashboard
+  # build command so preview deploys do not try to run a missing build.
+  command = "true"
   publish = "public"
+
+[build.processing]
+  skip_processing = true

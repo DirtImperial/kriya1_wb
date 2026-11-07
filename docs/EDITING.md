@@ -3,7 +3,7 @@
 ## Safe workflow
 
 1. Work on a branch. Keep `main` as the production baseline.
-2. Start the shared workspace: `python3 launch.py --no-open`. Check that `curl -s http://127.0.0.1:8766/api/workspace` shows `"workspaceId": "wave-breathing-local-v1"` and `"appRoot": ".../kriya1_wb/public"`.
+2. Start the app: `python3 launch.py --no-open`. Open http://127.0.0.1:8766/app/.
 3. Edit the files named in [ARCHITECTURE.md](ARCHITECTURE.md#source-of-truth). Edit `public/index.html` directly; it's the authoritative page.
 4. Run `node --test tests/*.test.js`. (`node --test tests/` doesn't work on Node 22.)
 5. Open http://127.0.0.1:8766/app/ on desktop and at phone width. Step through every part, change Appearance, and check the console and network for errors or 404s.
@@ -13,7 +13,7 @@ Never run `source/legacy-generators/` against this repository. Don't copy archiv
 
 ## Replace or add an avatar
 
-Avatar art is produced in the Asset Studio (a separate project). The Studio's export screen says to copy its `public/assets` folder into this app.
+Avatar art is copied into `public/assets/` with the practice files that use it.
 
 1. Prepare `public/assets/avatars/<id>.png`: 1024×1024 RGBA with a transparent background, aligned to the existing avatars. Crown, pelvis and seat must sit where `female-cloud-0.svg` and `avatars/woman.png` put them; compare it in the practice and in the chooser preview. Prepare `public/assets/avatars/thumbs/<id>.png` at 192×192 RGBA.
 2. To replace an existing avatar, overwrite those two files. No code change is needed.
@@ -23,9 +23,9 @@ Avatar art is produced in the Asset Studio (a separate project). The Studio's ex
 ## Replace or add an environment
 
 1. Prepare `public/assets/environments/<id>/day.png` and `night.png`: 1536×1024, opaque. Prepare `thumb-day.jpg` and `thumb-night.jpg` at 240×160.
-2. To replace an existing environment, overwrite those files. If the composition moved, adjust that environment's `stage` (`scale`, `x`, `y`) in `public/environment.js`. The figure stays fixed and the background moves under it.
-3. To add one, add an entry to `ENVIRONMENTS` in `public/environment.js` with `label`, `variants` and `stage`. The chooser lists environments from that object.
-4. If the paths change, update `tests/environment.test.js`, then run the tests.
+2. To replace an existing environment, overwrite those files. If the composition moved, adjust that scene's `stage` (`scale`, `x`, `y`) in `public/environment-layouts.js`. The figure stays fixed and the background moves under it. One transform is shared by the day/night pair.
+3. To add a scene, copy all four files into its folder and add an entry in `environment-layouts.js` with `label` and `stage`. The chooser lists every scene `environment.js` accepts.
+4. If the placement contract or path layout changes, update `tests/environment.test.js`, then run the tests.
 5. `index.html` hardcodes `assets/environments/grove/night.png` as the image shown before the script runs. Keep that file present.
 
 ## Lesson and UI changes

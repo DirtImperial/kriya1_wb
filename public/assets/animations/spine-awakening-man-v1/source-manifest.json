@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "id": "male-side-upright-spine-awakening-v1",
+  "status": "approved-original-specs-preserved",
+  "canvas": [
+    1254,
+    1254
+  ],
+  "master": "/Users/alissahsu/Desktop/exec-89258389-70fa-47c1-9eab-f4cc05900d7e.png",
+  "visualReference": "/Users/alissahsu/Desktop/seat-spine.png",
+  "instruction": "Visualize a hollow luminous column roughly in the center of your back. With every in-breath and out-breath it becomes more awake and energized.",
+  "frames": [
+    {
+      "file": "spine-glow-01-faint.png",
+      "state": "faint awakening",
+      "lockedOverlayOpacity": 0.28
+    },
+    {
+      "file": "spine-glow-02-awake.png",
+      "state": "awake",
+      "lockedOverlayOpacity": 0.5
+    },
+    {
+      "file": "spine-glow-03-energized.png",
+      "state": "energized",
+      "lockedOverlayOpacity": 0.74
+    },
+    {
+      "file": "spine-glow-04-peak.png",
+      "state": "peak energized",
+      "lockedOverlayOpacity": 1.0
+    }
+  ],
+  "lockedSpine": {
+    "source": "locked-spine-source.png",
+    "overlay": "spine-only-layer.png",
+    "mask": "locked-spine-mask.png",
+    "maskBoundingBox": [
+      386,
+      300,
+      565,
+      1026
+    ],
+    "placement": "posterior anatomical spine: base of skull, rear neck curve, close inside the back contour, ending at the rear sacrum",
+    "approximateVertebraCount": 33,
+    "vertebraTreatment": "small articulated cervical units, numerous thoracic units, broader lumbar units, and a tapered fused-looking sacral/coccygeal ending",
+    "spiritualTreatment": "warm-gold and white core, translucent amber edges, restrained cyan-violet aura, and tiny local energy motes",
+    "positionChangesBetweenFrames": false,
+    "shapeChangesBetweenFrames": false,
+    "animationMethod": "fixed overlay with opacity-only glow progression",
+    "isolation": "source-colored articulated core and local source-colored aura; former body silhouette excluded"
+  },
+  "preview": {
+    "file": "spine-glow-preview.webp",
+    "frameCount": 60,
+    "frameDelayCentiseconds": 12,
+    "loopDurationSeconds": 7.2,
+    "breathingPattern": "quick stepped illumination from sacrum to skull base, one full-column pixel-glow pulse, then the exact reverse illumination on exhale",
+    "loop": true
+  },
+  "breathSequence": {
+    "directory": "smooth-breath-sequence",
+    "progressiveFrames": 24,
+    "powerFrames": 12,
+    "inhaleDirection": "sacrum to skull base",
+    "exhaleDirection": "skull base to sacrum using the same frames in reverse",
+    "lightTransition": "60-pixel feathered reveal with smoothstep easing so adjacent vertebrae blend rather than pop",
+    "bodyMotion": {
+      "method": "fixed original master with targeted outline-pixel repair",
+      "exhaleKeyframe": "breathing-exhale-keyframe-clean.png",
+      "inhaleKeyframe": "breathing-inhale-keyframe-clean.png",
+      "keyframeMorphFrames": 36,
+      "motion": "the body remains registered and still; the locked spine illumination carries the inhale and exhale",
+      "alphaCleanupThreshold": 12,
+      "registration": "exact original 1254 by 1254 canvas, silhouette, seated baseline, and horizontal anchor",
+      "originalMaster": "body-master-original.png",
+      "cleanupGuide": "body-outline-cleanup-guide.png",
+      "renderedMaster": "body-master-preserved.png",
+      "repairedPixels": 15465,
+      "alphaPolicy": "original alpha channel preserved byte-for-byte",
+      "colorPolicy": "every non-target RGB pixel preserved byte-for-byte; replacements use guide colors or original-palette navy"
+    },
+    "powerEffect": "one full-column pulse with matched stepped halos flowing inward and outward around both sides of the spine, then settling before reversal"
+  },
+  "constraints": [
+    "The side-upright male avatar is the visual master.",
+    "The avatar remains upright with the same proportions, registration, and pixel-art detail.",
+    "The hollow amber-gold column uses one locked shape and one locked position in every frame; only glow opacity changes.",
+    "The chest remains free of chakra symbols and other markers.",
+    "The background remains transparent."
+  ],
+  "appRegistration": {
+    "master": "public/assets/avatars/man/poses/side-upright.png",
+    "masterCanvas": [
+      1024,
+      1024
+    ],
+    "renderCanvas": [
+      1254,
+      1254
+    ],
+    "method": "one shared CSS transform on the animation element; every frame receives the exact same registration",
+    "scale": 0.9383,
+    "translatePercent": [
+      -1.054,
+      2.807
+    ],
+    "target": "canonical male side-upright solid-pixel height, horizontal center, and seated baseline"
+  }
+}

@@ -5,14 +5,13 @@ A static guided practice: an Introduction, then six parts (Posture, Breath, Mant
 ## Working copy and local preview
 
 - **Working directory:** `~/Desktop/kriya1_wb`
-- **Start:** `python3 launch.py`, or `python3 launch.py --no-open` for agents. This runs the shared launcher in `../Wave_Breathing_Assets`, which serves the app and the separate Asset Studio together.
-- **App:** http://127.0.0.1:8766/app/. **Studio:** http://127.0.0.1:8766/studio/
-- Check `http://127.0.0.1:8766/api/workspace`: it should report `wave-breathing-local-v1` and this repository's `public` folder. Don't start a separate static server or use another port. Running the command again reuses the same workspace.
+- **Start:** `python3 launch.py`, or `python3 launch.py --no-open` for agents. Running the command again reuses the same server.
+- **App:** http://127.0.0.1:8766/app/
 - **Tests:** `node --test tests/*.test.js`
 
 ## Entry point and source of truth
 
-`public/index.html` is the app and is edited by hand. It loads `chooser.js`, `chooser.css`, `practice.css` and `environment.js` from the same folder. The Studio launcher expects these five files at the top of `public/`, so don't move them. Details are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+`public/index.html` is the app and is edited by hand. It loads `chooser.js`, `chooser.css`, `practice.css` and `environment.js` from the same folder. Keep those files, plus `environment-layouts.js`, at the top of `public/`. Details are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Active assets
 

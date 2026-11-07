@@ -4,10 +4,10 @@
    bottom on phones and narrow screens, a side panel on wide ones. */
 
 #skin-picker {
-  --skin-glass: rgba(10, 26, 34, 0.6);
-  --skin-glass-line: rgba(214, 236, 230, 0.16);
-  --skin-tile: rgba(244, 241, 232, 0.06);
-  --skin-tile-hover: rgba(244, 241, 232, 0.12);
+  --skin-glass: rgba(7, 25, 42, 0.88);
+  --skin-glass-line: rgba(168, 207, 200, 0.24);
+  --skin-tile: rgba(244, 241, 232, 0.055);
+  --skin-tile-hover: rgba(158, 231, 220, 0.12);
   --skin-ring: #bee9d5;
   --skin-soft: #a8cfc8;
   --skin-halo: rgba(158, 231, 220, 0.3);
@@ -30,14 +30,17 @@
   pointer-events: none;
 }
 
-.skin-world svg { display: block; }
+.skin-world svg {
+  display: block;
+  max-width: none;
+}
 
 #skin-picker::after {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(7, 18, 26, 0) 55%, rgba(7, 18, 26, 0.7) 78%, rgba(7, 18, 26, 0.92) 100%);
+  background: linear-gradient(180deg, rgba(7, 18, 26, 0) 42%, rgba(7, 18, 26, 0.48) 66%, rgba(7, 18, 26, 0.86) 100%);
 }
 
 .skin-stage {
@@ -56,6 +59,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transition: filter 0.95s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .skin-halo {
@@ -83,7 +87,7 @@
   z-index: 2;
   left: 50%;
   bottom: 0;
-  width: min(640px, 100%);
+  width: min(760px, 100%);
   max-height: 100%;
   box-sizing: border-box;
   overflow-y: auto;
@@ -97,13 +101,76 @@
   to { opacity: 1; translate: 0 0; }
 }
 
-/* Leaving: the choices sink first, then the scene dissolves into the practice. */
+/* Apply and Cancel dissolve. Begin is slower: the choices leave, the scene
+   eases into the introduction's crop, then the sheet fades only once they match. */
 #skin-picker.is-leaving {
   pointer-events: none;
-  animation: skin-leave 0.75s 0.15s ease-in-out both;
+  animation: skin-leave 1s 0.2s cubic-bezier(0.37, 0, 0.63, 1) both;
 }
 
-#skin-picker.is-leaving .skin-options { animation: skin-sink 0.45s ease-in both; }
+#skin-picker.is-leaving .skin-options { animation: skin-sink 0.6s cubic-bezier(0.37, 0, 0.63, 1) both; }
+#skin-picker.is-leaving #skin-close { animation: skin-leave 0.3s ease-out both; }
+
+/* Back arrow: mirrors the settings button, top left, and closes like Cancel. */
+#skin-close {
+  position: fixed;
+  z-index: 3;
+  top: max(8px, env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(7, 25, 42, 0.5);
+  color: var(--wb-ink, #f4f1e8);
+  border-color: rgba(244, 241, 232, 0.32);
+  box-shadow: none;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+#skin-close[hidden] { display: none; }
+#skin-close:hover { border-color: rgba(244, 241, 232, 0.6); background: rgba(7, 25, 42, 0.7); }
+#skin-close svg { width: 20px; height: 20px; display: block; }
+
+.skin-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(4, 4, 12, 0.4) 46%, rgba(4, 4, 12, 0.9) 100%) bottom / 100% 50% no-repeat,
+    radial-gradient(120% 90% at 50% 34%, transparent 42%, rgba(4, 4, 12, 0.5) 100%),
+    rgba(4, 4, 12, 0.4);
+}
+
+/* One slow, symmetric curve for everything that moves, so the scene (eased in
+   chooser.js with the same curve), the figure and the widening world stay together. */
+#skin-picker {
+  --skin-settle: 0.95s;
+  --skin-settle-delay: 0.05s;
+  --skin-settle-ease: cubic-bezier(0.37, 0, 0.63, 1);
+}
+
+#skin-picker.is-entering {
+  pointer-events: none;
+  animation: skin-leave 0.5s 0.9s ease-in-out both;
+}
+
+#skin-picker.is-entering .skin-options { animation: skin-depart 0.35s ease-out both; }
+#skin-picker.is-entering .skin-halo { animation: skin-leave 0.45s ease both; }
+#skin-picker.is-entering::after { animation: skin-leave 0.35s ease-out both; }
+#skin-picker.is-entering .skin-veil { animation: skin-arrive var(--skin-settle) var(--skin-settle-delay) var(--skin-settle-ease) both; }
+#skin-picker.is-entering .skin-figure {
+  filter: brightness(0.62);
+  transition: filter var(--skin-settle) var(--skin-settle-ease) var(--skin-settle-delay);
+}
+
+html.wave-arriving #skin-reopen { animation: skin-arrive 0.6s 1.3s ease both; }
 
 @keyframes skin-leave {
   from { opacity: 1; }
@@ -115,17 +182,27 @@
   to { opacity: 0; translate: 0 18px; }
 }
 
-.skin-panel {
-  padding: 16px 16px 14px;
-  background: var(--skin-glass);
-  border: 1px solid var(--skin-glass-line);
-  border-radius: 24px;
-  box-shadow: 0 24px 60px rgba(2, 8, 14, 0.35);
-  -webkit-backdrop-filter: blur(18px) saturate(1.1);
-  backdrop-filter: blur(18px) saturate(1.1);
+@keyframes skin-depart {
+  from { opacity: 1; translate: 0 0; }
+  to { opacity: 0; translate: 0 12px; }
 }
 
-.skin-head { text-align: center; margin-bottom: 12px; }
+@keyframes skin-arrive {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.skin-panel {
+  padding: 18px 18px 16px;
+  background: var(--skin-glass);
+  border: 1px solid var(--skin-glass-line);
+  border-radius: 18px;
+  box-shadow: 0 20px 52px rgba(2, 8, 14, 0.3);
+  -webkit-backdrop-filter: blur(10px) saturate(1.04);
+  backdrop-filter: blur(10px) saturate(1.04);
+}
+
+.skin-head { text-align: left; margin-bottom: 16px; }
 
 .skin-head small {
   display: block;
@@ -136,29 +213,27 @@
 }
 
 .skin-head h1 {
-  font-family: 'Newsreader', Georgia, serif;
-  font-weight: 300;
-  font-size: 26px;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  margin: 6px 0 4px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+  font-size: clamp(24px, 5.8vw, 32px);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  margin: 6px 0 5px;
   text-wrap: balance;
 }
 
 .skin-head h1:focus { outline: none; }
 
 .skin-head p {
-  font-family: 'Newsreader', Georgia, serif;
-  font-weight: 300;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 400;
   color: #d5e2e6;
-  font-size: 1rem;
-  line-height: 1.35;
-  margin: 0 auto;
-  max-width: 36ch;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  margin: 0;
+  max-width: 44ch;
   text-wrap: balance;
 }
-
-.skin-greeting { font-style: italic; color: var(--wb-ink, #f4f1e8); }
 
 .skin-sheet fieldset {
   border: 0;
@@ -176,12 +251,39 @@
   color: var(--skin-soft);
 }
 
+.skin-times {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.skin-time {
+  appearance: none;
+  min-height: 36px;
+  padding: 7px 8px;
+  color: var(--wb-ink, #f4f1e8);
+  font: 500 0.86rem/1.15 'Space Grotesk', sans-serif;
+  background: var(--skin-tile);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.skin-time:hover { background: var(--skin-tile-hover); }
+
+.skin-time[aria-pressed="true"] {
+  background: rgba(158, 231, 220, 0.1);
+  border-color: var(--skin-ring);
+}
+
 /* Place tiles */
 
 .skin-places {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
+  gap: 10px;
 }
 
 .skin-place {
@@ -189,39 +291,46 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 7px;
   min-width: 0;
   min-height: 0;
-  padding: 4px 4px 6px;
+  padding: 5px 5px 8px;
   color: var(--wb-ink, #f4f1e8);
-  font: 500 0.68rem/1.15 'Space Grotesk', sans-serif;
+  font: 500 clamp(0.68rem, 2.5vw, 0.88rem)/1.15 'Space Grotesk', sans-serif;
   text-align: center;
   background: var(--skin-tile);
   border: 1px solid transparent;
-  border-radius: 14px;
+  border-radius: 15px;
   cursor: pointer;
   touch-action: manipulation;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
+.skin-place[hidden] { display: none; }
 
 .skin-place img {
   flex: none;
   width: 100%;
-  height: 36px;
+  height: clamp(42px, 11vw, 70px);
   object-fit: cover;
   border-radius: 10px;
   image-rendering: pixelated;
   pointer-events: none;
 }
 
-.skin-place span { min-width: 0; max-width: 100%; }
+.skin-place span {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 /* Avatar discs */
 
 .skin-avatars {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
+  gap: 10px;
 }
 
 .skin-avatar {
@@ -244,13 +353,13 @@
 .skin-avatar-disc {
   display: grid;
   place-items: center;
-  width: min(56px, 100%);
+  width: min(64px, 100%);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 40%, rgba(158, 231, 220, 0.16), rgba(244, 241, 232, 0.05) 70%);
-  box-shadow: inset 0 0 0 1px rgba(214, 236, 230, 0.14);
+  background: radial-gradient(ellipse at 50% 82%, rgba(158, 231, 220, 0.16), rgba(158, 231, 220, 0) 66%);
+  box-shadow: none;
   transition: box-shadow 0.3s ease, background 0.3s ease, transform 0.3s ease;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .skin-avatar:hover .skin-avatar-disc { transform: scale(1.04); }
@@ -266,22 +375,23 @@
 }
 
 .skin-place:hover { background: var(--skin-tile-hover); }
-.skin-avatar:hover .skin-avatar-disc { background: radial-gradient(circle at 50% 40%, rgba(158, 231, 220, 0.24), rgba(244, 241, 232, 0.08) 70%); }
+.skin-avatar:hover .skin-avatar-disc { background: radial-gradient(ellipse at 50% 82%, rgba(158, 231, 220, 0.26), rgba(158, 231, 220, 0) 68%); }
 
 .skin-place[aria-pressed="true"] {
-  background: rgba(190, 233, 213, 0.14);
+  background: rgba(158, 231, 220, 0.1);
   border-color: var(--skin-ring);
 }
 
 .skin-avatar[aria-pressed="true"] { color: var(--wb-ink, #f4f1e8); }
 
 .skin-avatar[aria-pressed="true"] .skin-avatar-disc {
-  background: radial-gradient(circle at 50% 40%, rgba(158, 231, 220, 0.34), rgba(38, 75, 78, 0.6) 72%);
-  box-shadow: inset 0 0 0 2px var(--skin-ring), 0 0 18px rgba(158, 231, 220, 0.28);
+  background: radial-gradient(ellipse at 50% 80%, rgba(158, 231, 220, 0.3), rgba(38, 75, 78, 0.08) 66%);
+  box-shadow: inset 0 0 0 2px var(--skin-ring), 0 0 14px rgba(158, 231, 220, 0.16);
 }
 
 .skin-place:focus-visible,
-.skin-avatar:focus-visible {
+.skin-avatar:focus-visible,
+.skin-time:focus-visible {
   outline: 3px solid var(--wb-gold, #ffe4a5);
   outline-offset: 3px;
 }
@@ -289,90 +399,145 @@
 /* Actions */
 
 .skin-actions { display: flex; gap: 10px; }
-.skin-actions .wb-button { flex: 1 1 0; border-radius: 999px; min-height: 46px; }
+.skin-actions .wb-button { flex: 1 1 0; border-radius: 14px; min-height: 48px; }
 
 #skin-picker .wb-button-primary {
-  box-shadow: 0 0 0 1px rgba(213, 226, 184, 0.6), 0 10px 30px rgba(231, 239, 210, 0.18);
+  color: var(--wb-ink, #f4f1e8);
+  background: linear-gradient(90deg, rgba(43, 101, 111, 0.96), rgba(54, 119, 121, 0.96));
+  border-color: rgba(158, 207, 204, 0.55);
+  box-shadow: 0 10px 28px rgba(6, 31, 39, 0.25);
   letter-spacing: 0.02em;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-#skin-picker .wb-button-primary:hover { box-shadow: 0 0 0 1px rgba(213, 226, 184, 0.8), 0 10px 36px rgba(231, 239, 210, 0.3); }
-#skin-picker .wb-button-primary:active { box-shadow: 0 0 0 1px rgba(213, 226, 184, 0.8); }
+#skin-picker .wb-button-primary:hover {
+  background: linear-gradient(90deg, rgba(52, 118, 128, 0.98), rgba(66, 138, 139, 0.98));
+  border-color: rgba(190, 233, 213, 0.76);
+  box-shadow: 0 12px 34px rgba(13, 58, 64, 0.34);
+}
+#skin-picker .wb-button-primary:active { box-shadow: 0 5px 16px rgba(6, 31, 39, 0.24); }
 #skin-picker .wb-button-secondary { background: rgba(244, 241, 232, 0.06); }
 
-/* Wider bottom sheet: place and avatars side by side. */
+/* Tablets keep the same image-first selector treatment with a little more air. */
 @media (min-width: 640px) {
-  .skin-sheet {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-    column-gap: 16px;
-  }
-  .skin-places { grid-template-columns: 1fr; gap: 6px; }
-  .skin-place {
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
-    gap: 8px;
-    min-height: 44px;
-    padding: 4px 10px 4px 4px;
-    font-size: 0.88rem;
-    line-height: 1.2;
-  }
-  .skin-place img { width: 44px; height: 32px; }
-  .skin-actions { grid-column: 1 / -1; }
+  .skin-panel { padding: 22px 24px 20px; }
+  .skin-head { margin-bottom: 18px; }
+  .skin-sheet fieldset { margin-bottom: 16px; }
+  .skin-places { gap: 14px; }
+  .skin-place img { height: 72px; }
+  .skin-avatar-disc { width: min(72px, 100%); }
 }
 
 /* The bottom sheet stays compact so it covers no more of the figure than the
    practice's own text does: just the heading and the choices. */
 @media not ((min-width: 960px) and (min-aspect-ratio: 7/5)) {
-  .skin-panel { padding: 12px 12px 12px; }
-  .skin-head { margin-bottom: 10px; }
-  .skin-head small,
-  .skin-intro { display: none; }
-  .skin-head h1 { font-size: 22px; margin: 0; }
-  .skin-sheet legend {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-  }
-  .skin-sheet fieldset { margin-bottom: 10px; }
+  .skin-panel { padding: 16px 16px 14px; }
+  .skin-head { margin-bottom: 14px; }
+  .skin-sheet fieldset { margin-bottom: 14px; }
   .skin-place { min-height: 0; }
-  .skin-place img { height: 32px; }
-  .skin-avatar-disc { width: min(46px, 100%); }
+  .skin-avatar-disc { width: min(54px, 100%); }
   .skin-actions .wb-button { min-height: 44px; }
 }
 
-/* Wide screens: a side panel to the right of the figure. */
+/* Wide screens: a true split composition, with the world and figure on the
+   left and the controls in their own quiet space on the right. */
 @media (min-width: 960px) and (min-aspect-ratio: 7/5) {
+  /* The feather sits just past the right edge until Begin pulls it into view. */
+  .skin-world {
+    right: auto;
+    width: 54%;
+    overflow: hidden;
+    box-shadow: 28px 0 72px rgba(2, 8, 14, 0.2);
+    -webkit-mask: linear-gradient(90deg, #000 calc(100% - 16vw), transparent) 0 0 / calc(100% + 16vw) 100% no-repeat;
+    mask: linear-gradient(90deg, #000 calc(100% - 16vw), transparent) 0 0 / calc(100% + 16vw) 100% no-repeat;
+  }
+  .skin-world svg {
+    width: 100vw;
+    transform: translateX(var(--skin-scene-x, -23%));
+  }
+  #skin-picker[data-environment="grove"] { --skin-scene-x: -23%; }
+  #skin-picker[data-environment="mountain"] { --skin-scene-x: -23%; }
+  #skin-picker[data-environment="office"] { --skin-scene-x: -26%; }
   #skin-picker::after {
-    background: linear-gradient(90deg, rgba(7, 18, 26, 0) 55%, rgba(7, 18, 26, 0.55) 100%);
+    background: linear-gradient(90deg, rgba(7, 18, 26, 0) 49%, rgba(7, 18, 26, 0.42) 54%, rgba(7, 18, 26, 0) 59%);
+  }
+  .skin-stage {
+    left: 27%;
+    top: 50%;
+    width: min(40vw, 540px);
+    height: min(40vw, 540px);
+    transform: translate(-50%, -47%);
+    transition: left 0.75s ease-in-out, top 0.75s ease-in-out, width 0.75s ease-in-out, height 0.75s ease-in-out, transform 0.75s ease-in-out;
+  }
+  #skin-picker.is-leaving .skin-stage,
+  #skin-picker.is-entering .skin-stage {
+    left: 50%;
+    top: var(--grove-y);
+    width: var(--grove-box);
+    height: var(--grove-box);
+    transform: translateX(-50%);
+  }
+  #skin-picker.is-entering .skin-stage {
+    transition-duration: var(--skin-settle);
+    transition-delay: var(--skin-settle-delay);
+    transition-timing-function: var(--skin-settle-ease);
+  }
+  /* The world widens past the right edge with a feathered border, so the scene
+     drifts over the panel like a soft wipe instead of a hard edge. The feather
+     moves on the same curve as the width, so the edge only ever travels right. */
+  #skin-picker.is-entering .skin-world {
+    width: calc(100% + 16vw);
+    box-shadow: none;
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    transition: width var(--skin-settle) var(--skin-settle-ease) var(--skin-settle-delay), box-shadow 0.3s ease,
+      -webkit-mask-size var(--skin-settle) var(--skin-settle-ease) var(--skin-settle-delay),
+      mask-size var(--skin-settle) var(--skin-settle-ease) var(--skin-settle-delay);
+  }
+  #skin-picker.is-entering .skin-world svg {
+    transform: none;
+    transition: transform var(--skin-settle) var(--skin-settle-ease) var(--skin-settle-delay);
   }
   .skin-options {
-    left: auto;
-    right: max(24px, 4vw);
+    left: 58%;
+    right: auto;
     top: 50%;
     bottom: auto;
-    width: clamp(320px, 28vw, 420px);
+    width: min(38%, 560px);
     max-height: calc(100% - 48px);
     padding: 0;
     transform: translateY(-50%);
   }
-  .skin-panel { padding: 24px 22px 20px; }
-  .skin-head { text-align: left; margin-bottom: 18px; }
+  .skin-panel {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .skin-head { margin-bottom: 20px; }
   .skin-head small { font-size: 11px; }
-  .skin-head h1 { font-size: clamp(28px, 2.6vw, 38px); margin: 10px 0 8px; }
-  .skin-head p { margin: 0; font-size: 1.08rem; }
-  .skin-greeting { display: block; }
+  .skin-head h1 { font-size: clamp(30px, 2.35vw, 38px); margin: 8px 0 6px; }
+  .skin-head p { font-size: 0.96rem; }
   .skin-sheet { display: block; }
-  .skin-sheet fieldset { margin-bottom: 16px; }
-  .skin-places { grid-template-columns: 1fr; gap: 8px; }
-  .skin-place { min-height: 48px; font-size: 0.92rem; }
-  .skin-place img { width: 56px; height: 40px; }
-  .skin-avatar-disc { width: min(64px, 100%); }
-  .skin-actions .wb-button { min-height: 50px; }
+  .skin-sheet fieldset { margin-bottom: 20px; }
+  .skin-places { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .skin-place { min-height: 0; font-size: 0.86rem; }
+  .skin-place img { width: 100%; height: clamp(66px, 6vw, 86px); }
+  .skin-avatar-disc { width: min(72px, 100%); }
+  .skin-actions .wb-button { min-height: 54px; }
+}
+
+/* Keep the chooser usable on short landscape screens without changing its hierarchy. */
+@media (min-width: 960px) and (min-aspect-ratio: 7/5) and (max-height: 690px) {
+  .skin-head { margin-bottom: 14px; }
+  .skin-head h1 { font-size: 30px; }
+  .skin-sheet fieldset { margin-bottom: 13px; }
+  .skin-place img { height: 56px; }
+  .skin-avatar-disc { width: min(58px, 100%); }
+  .skin-actions .wb-button { min-height: 48px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

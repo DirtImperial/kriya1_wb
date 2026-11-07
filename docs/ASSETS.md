@@ -9,7 +9,7 @@ Roles come from searching the app files, the review page, the archived pages, th
 **Coordinate systems**
 
 - **Figure:** every seated figure is drawn in a 1024×1024 box. The page markup in `index.html` refers to the original female frames (`female-cloud-0..3.svg` for breath, `female-pose-0..3.svg` for posture). These are SVGs that wrap embedded PNGs in a `0 0 1024 1024` viewBox. The browser still loads them when the page loads.
-- **Environment:** every background is 1536×1024 and opaque. The practice shows the `0 210 1536 814` window of it (`xMidYMid slice`). The figure never moves. Each environment's `stage` matrix in `environment.js` shifts or scales the background under the figure. Mirrored copies fill the edges. Mountain Sky uses scale 0.8145, offset (150.8, 75.4), which puts the peak on the third eye and the horizon through the navel. Sunlit Office uses x −140, which centers the chair.
+- **Environment:** every background is 1536×1024 and opaque. The practice shows the `0 210 1536 814` window of it (`xMidYMid slice`). The figure never moves. Each environment's `stage` matrix in `environment-layouts.js` shifts or scales the background under the figure, and mirrored copies normally fill the edges. A scene may define an `edgeFill.bottom` source strip and an optional side-floor line when clean floor should continue instead of mirrored objects. Mountain Sky uses scale 0.8145, offset (150.8, 75.4), which puts the peak on the third eye and the horizon through the navel. Sunlit Office uses offset (−140, −100) plus its wood-floor extension, keeping the chair centered and the avatar inside the single rug without repeating the carpet below or beside it.
 
 **Avatars**
 
@@ -22,7 +22,7 @@ Roles come from searching the app files, the review page, the archived pages, th
 
 **Day and night**
 
-`environment.js` picks day from 07:00 to 19:00 device-local time, otherwise night. The choice is frozen when a practice begins.
+`environment.js` loads the generated placements, then picks day from 07:00 to 19:00 device-local time, otherwise night. The choice is frozen when a practice begins. Missing or invalid generated data falls back to the three built-in scene placements.
 
 ## Unresolved observations (left as found)
 

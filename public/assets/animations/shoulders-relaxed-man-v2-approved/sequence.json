@@ -1,0 +1,28 @@
+{
+  "id": "shoulders-relaxed-man-v2-approved",
+  "label": "Shoulders relaxed · approved master male stills",
+  "source": "user-approved exact still frames",
+  "canvas": {
+    "width": 1254,
+    "height": 1254
+  },
+  "loop": true,
+  "frames": [
+    {
+      "file": "frame-01-raised.png",
+      "label": "Shoulders gently raised",
+      "duration_ms": 900
+    },
+    {
+      "file": "frame-03-relaxed.png",
+      "label": "Halfway release",
+      "duration_ms": 700
+    },
+    {
+      "file": "frame-02-release.png",
+      "label": "Shoulders relaxed",
+      "duration_ms": 1500
+    }
+  ],
+  "notes": "Exact user-approved PNG stills. The source filenames for frames 02 and 03 are reversed relative to their visible poses, so the sequence lists frame 03 as halfway and frame 02 as relaxed. The app displays one complete frame at a time and loops in anatomical order: raised, releasing, relaxed. The relaxed pose holds before the next cycle; no generated animation, blending, outline processing, or baked arrows."
+}

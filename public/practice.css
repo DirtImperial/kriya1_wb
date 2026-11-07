@@ -1,6 +1,6 @@
 /* Provisional interface tokens. Art direction is still open; these are easy to retune.
-   Progress is one navigator: the current part and step above six equal sections
-   that fill with acknowledged instructions, the current part tinted. The whole navigator is one
+   Progress is one navigator: the current part and step above six groups of luminous
+   instruction orbs. The whole navigator is one
    button that opens the session overview, a bottom sheet where a part heading
    expands and a step jumps. */
 
@@ -64,10 +64,58 @@
 /* The scene is clickable. The words and the controls keep their own pointer. */
 .wb-practice [data-graphiczone] { pointer-events: auto; }
 
+/* The introduction keeps the seated figure in the grove, under the same veil
+   that mutes the trees. Later steps bring their own figure forward. */
+.grove-world .intro-figure { transition: opacity 1.1s ease; }
+.wb-practice:has(.practice-page) .intro-figure,
+.wb-practice:has(.closing-page) .intro-figure { opacity: 0; }
+
+/* Begin practice: the words rise in as the opening scene finishes settling. */
+html.wave-arriving .wb-practice [data-textzone] {
+  animation: wb-arrive 0.65s 0.8s ease-out both;
+}
+
+/* The controls follow the title instead of arriving with it. */
+html.wave-arriving .wb-practice .wb-bar {
+  animation: wb-arrive 0.8s 1.15s ease-out both;
+}
+
+@keyframes wb-arrive {
+  from { opacity: 0; translate: 0 14px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+/* The introduction is one title over the scene, so its controls stay quiet
+   until they're reached for: Continue is outlined, not filled or breathing,
+   the navigator and Appearance recede, and the unused Back steps aside. */
+.wb-practice:has(.intro-page) .wb-step-button[data-forward] {
+  border-color: rgba(244, 241, 232, 0.34);
+  background: rgba(244, 241, 232, 0.06);
+  color: var(--wb-ink);
+  animation: none;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.wb-practice:has(.intro-page) .wb-step-button[data-forward]:hover,
+.wb-practice:has(.intro-page) .wb-step-button[data-forward]:focus-visible {
+  border-color: var(--wb-ink);
+  background: var(--wb-ink);
+  color: #0b1a20;
+}
+
+.wb-practice:has(.intro-page) .wb-step-button[data-back]:disabled { visibility: hidden; }
+
+.wb-practice:has(.intro-page) .wb-nav { opacity: 0.6; transition: opacity 0.3s ease, background-color var(--wb-fill-time) ease, border-color var(--wb-fill-time) ease; }
+.wb-practice:has(.intro-page) .wb-nav:hover,
+.wb-practice:has(.intro-page) .wb-nav:focus-visible,
+.wb-practice:has(.intro-page) .wb-nav[aria-expanded="true"] { opacity: 1; }
+
+body:has(.intro-page) #skin-reopen { border-color: rgba(244, 241, 232, 0.16); color: rgba(244, 241, 232, 0.7); }
+body:has(.intro-page) #skin-reopen:hover { border-color: rgba(244, 241, 232, 0.55); color: var(--wb-ink); }
+
 .wb-practice [data-textzone],
 .wb-practice .wb-bar,
-.wb-practice .wb-sheet,
-.wb-practice .wb-complete {
+.wb-practice .wb-sheet {
   cursor: auto;
 }
 
@@ -153,7 +201,6 @@
 }
 
 /* Headings take focus only to give a jump a destination. */
-#wb-complete-title:focus,
 #wb-sheet-title:focus,
 [data-heading]:focus { outline: none; }
 
@@ -163,8 +210,7 @@
 .wb-nav:focus-visible,
 .wb-sheet-close:focus-visible,
 .wb-map-part:focus-visible,
-.wb-map-step:focus-visible,
-#wb-complete-title:focus-visible {
+.wb-map-step:focus-visible {
   outline: 3px solid var(--wb-gold);
   outline-offset: 3px;
 }
@@ -174,18 +220,33 @@
   z-index: 80;
   top: max(8px, env(safe-area-inset-top));
   right: max(12px, env(safe-area-inset-right));
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--wb-ink);
+  border-color: rgba(244, 241, 232, 0.28);
+  box-shadow: none;
 }
 
-/* On Finish the words and controls fade away and leave the scene. */
-.wb-stage,
-.wb-bar { transition: opacity 0.9s ease, visibility 0s; }
-
-.wb-root[data-done="true"] .wb-stage,
-.wb-root[data-done="true"] .wb-bar {
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.9s ease, visibility 0s 0.9s;
+#skin-reopen:hover {
+  border-color: rgba(244, 241, 232, 0.55);
+  background: rgba(244, 241, 232, 0.06);
 }
+
+#skin-reopen:active { background: rgba(244, 241, 232, 0.1); }
+
+#skin-reopen svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
 
 /* ===== Instruction copy ===== */
 
@@ -238,7 +299,6 @@
 /* These layers had no transition, so they cut in while their neighbours faded. */
 [data-layer="hands-down"],
 [data-layer="empty-outline"],
-[data-layer="mantra-body"],
 [data-layer="visualization"] { transition: opacity 1s ease; }
 
 .practice-page [data-body],
@@ -255,15 +315,100 @@
 .closing-page [data-textzone],
 .intro-page [data-textzone] { padding-bottom: 16px !important; }
 
-@media (max-height: 760px) {
-  .closing-page [data-textzone] {
-    padding: 8px 16px 8px !important;
-    gap: 6px !important;
-  }
-  .closing-page [data-closing-portrait] { height: 128px !important; }
-  .closing-page [data-closing-mantra] { font-size: 1.15rem !important; }
-  .closing-page h1 { font-size: 1.4rem !important; }
-  .closing-page [data-body] { font-size: 1rem !important; }
+/* ===== Ending: Recognizing the Root Gurus =====
+   Kept plain, like the last page of a printed booklet: the portrait, the
+   words, and the mantra set last as the sign-off. */
+[data-closing-seal] { display: none; }
+
+.wb-practice .closing-page [data-textzone] {
+  justify-content: center;
+  gap: 0 !important;
+  padding: 40px 24px 24px !important;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.55);
+}
+
+.closing-page [data-eyebrow]:empty { display: none; }
+
+.closing-page [data-closing-seal] {
+  order: 1;
+  position: relative;
+  display: block;
+  width: clamp(160px, 28vh, 260px);
+  aspect-ratio: 1;
+  margin-bottom: clamp(18px, 3vh, 28px);
+}
+
+/* Warm light behind the portrait, a little uneven like a lamp in the room,
+   swelling slowly on the practice's 4s-in, 6s-out breath. */
+.closing-page [data-closing-seal]::before {
+  content: '';
+  position: absolute;
+  inset: -62% -70% -54%;
+  background:
+    radial-gradient(closest-side at 50% 47%, rgba(255, 190, 100, 0.5) 40%, rgba(255, 190, 100, 0.16) 68%, rgba(255, 190, 100, 0) 100%),
+    radial-gradient(closest-side at 42% 40%, rgba(255, 228, 176, 0.22) 30%, rgba(255, 228, 176, 0) 80%);
+  filter: blur(6px);
+  pointer-events: none;
+  animation: wb-lamp 10s ease-in-out infinite;
+}
+
+@keyframes wb-lamp {
+  0%, 100% { opacity: 0.7; transform: scale(0.96); }
+  40% { opacity: 1; transform: scale(1.03); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .closing-page [data-closing-seal]::before { animation: none; }
+}
+
+.wb-practice .closing-page [data-closing-portrait] {
+  position: relative;
+  width: 100%;
+  height: 100% !important;
+  object-fit: cover;
+  mask-image: radial-gradient(circle closest-side, #000 80%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle closest-side, #000 80%, transparent 100%);
+}
+
+.closing-page [data-heading] {
+  order: 2;
+  margin: 0 0 10px !important;
+  font-size: clamp(1.6rem, 3vw, 2.4rem) !important;
+}
+
+.closing-page [data-body] {
+  order: 3;
+  max-width: 38ch !important;
+  margin: 0 !important;
+  color: rgba(244, 241, 232, 0.86) !important;
+  font-family: 'Newsreader', serif !important;
+  font-weight: 400 !important;
+  font-size: clamp(1.1rem, 2vw, 1.32rem) !important;
+  line-height: 1.5 !important;
+  text-wrap: pretty;
+}
+
+.wb-practice .closing-page [data-closing-mantra] {
+  order: 4;
+  margin: clamp(16px, 2.6vh, 24px) 0 0;
+  color: #f1dcb4;
+  font: italic 400 clamp(1.1rem, 2vw, 1.32rem)/1.4 'Newsreader', serif !important;
+}
+
+@media (max-width: 600px) {
+  .wb-practice .closing-page [data-textzone] { padding: 28px 22px 16px !important; }
+  .closing-page [data-closing-seal] { width: min(52vw, 28vh); }
+  .closing-page [data-heading] { font-size: 1.5rem !important; }
+  .closing-page [data-body],
+  .wb-practice .closing-page [data-closing-mantra] { font-size: 1.06rem !important; }
+}
+
+@media (max-height: 620px) {
+  .closing-page [data-closing-seal] { width: 130px; margin-bottom: 12px; }
+  .closing-page [data-heading] { font-size: 1.4rem !important; margin-bottom: 6px !important; }
+  .closing-page [data-body],
+  .wb-practice .closing-page [data-closing-mantra] { font-size: 1rem !important; }
+  .wb-practice .closing-page [data-closing-mantra] { margin-top: 12px; }
 }
 
 /* ===== Footer: navigator, Back, primary action ===== */
@@ -380,43 +525,253 @@
 .wb-nav-cue svg { width: 12px; height: 12px; }
 
 .wb-tracks {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(9px, 2.4vw, 16px);
+  min-height: 18px;
 }
 
-.wb-seg { display: block; min-width: 0; }
+.wb-orb-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(4px, 1.25vw, 7px);
+  min-width: 0;
+}
 
-.wb-track {
+.wb-orb {
+  position: relative;
   display: block;
+  flex: none;
+  width: clamp(6px, 1.7vw, 9px);
+  height: clamp(6px, 1.7vw, 9px);
+  border-radius: 50%;
+  background: rgba(201, 216, 220, 0.28);
+  box-shadow: inset 0 0 0 1px rgba(244, 241, 232, 0.05);
+  transition: background-color var(--wb-fill-time) ease, box-shadow 0.45s ease, transform 0.45s ease;
+}
+
+/* Acknowledged steps retain a quiet afterglow: a trail, not a second focal point. */
+.wb-orb[data-acked="true"] {
+  background: #baf3e8;
+  box-shadow:
+    0 0 4px rgba(158, 231, 220, 0.85),
+    0 0 10px rgba(87, 224, 214, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.38);
+}
+
+/* The current step ignites once as it arrives. The small leading mote makes the
+   handoff feel like energy travelling along a strand of beads. */
+.wb-orb[data-current="true"] {
+  z-index: 2;
+  background: #fffdf1;
+  transform: scale(1.18);
+  box-shadow:
+    0 0 5px rgba(255, 253, 241, 0.95),
+    0 0 13px rgba(158, 231, 220, 0.92),
+    0 0 24px rgba(87, 224, 214, 0.38),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.72);
+  animation: wb-orb-bloom 0.72s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.wb-orb[data-current="true"]::before,
+.wb-orb[data-current="true"]::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.wb-orb[data-current="true"]::before {
+  left: -12px;
+  width: 4px;
   height: 4px;
-  border-radius: 999px;
-  background: rgba(244, 241, 232, 0.12);
-  overflow: hidden;
+  background: #eafff9;
+  box-shadow: -6px 1px 5px rgba(158, 231, 220, 0.72), -11px -1px 7px rgba(87, 224, 214, 0.42);
+  animation: wb-orb-travel 0.78s ease-out both;
 }
 
-/* The current part is a brighter tint of the track, never an outline or pulse. */
-.wb-seg[data-current="true"] .wb-track { background: rgba(158, 231, 220, 0.3); }
-
-.wb-fill {
-  display: block;
-  height: 100%;
-  width: 0;
-  border-radius: inherit;
-  background: var(--wb-accent);
-  transition: width var(--wb-fill-time) ease-out;
+.wb-orb[data-current="true"]::after {
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(205, 255, 246, 0.58);
+  transform: translate(-50%, -50%) scale(0.25);
+  animation: wb-orb-ring 0.9s 0.12s ease-out both;
 }
 
-/* Back is the way out, not the way on: a quiet ghost beside the primary. */
-.wb-bar [data-back] {
+@keyframes wb-orb-bloom {
+  0% { opacity: 0.42; transform: scale(0.68); filter: brightness(0.75); }
+  55% { opacity: 1; transform: scale(1.42); filter: brightness(1.2); }
+  100% { opacity: 1; transform: scale(1.18); filter: none; }
+}
+
+@keyframes wb-orb-travel {
+  0% { opacity: 0; transform: translate(-10px, -50%) scale(0.4); }
+  28% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(11px, -50%) scale(1); }
+}
+
+@keyframes wb-orb-ring {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.25); }
+  30% { opacity: 0.72; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wb-orb { transition: none; }
+  .wb-orb[data-current="true"] { animation: none; }
+  .wb-orb[data-current="true"]::before,
+  .wb-orb[data-current="true"]::after { display: none; }
+}
+
+/* Back and Continue are one pair: the same plain pill, same size and type.
+   Continue is filled, Back is outlined; Continue alone breathes. */
+.wb-step-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  min-width: 112px;
+  padding: 0 20px;
+  border: 1px solid rgba(244, 241, 232, 0.28);
   background: transparent;
-  border-color: transparent;
-  color: var(--wb-muted);
+  color: var(--wb-ink);
+  font: 600 0.95rem/1.2 'Space Grotesk', sans-serif;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
-.wb-bar [data-back]:hover:not(:disabled) {
-  background: rgba(158, 231, 220, 0.07);
+.wb-step-button[data-back] { padding-left: 14px; }
+.wb-step-button[data-forward] { padding-right: 14px; }
+
+.wb-step-icon { flex: none; display: inline-flex; transition: transform 0.2s ease; }
+.wb-step-icon svg { width: 16px; height: 16px; }
+
+.wb-step-button[data-back]:hover:not(:disabled) {
+  border-color: rgba(244, 241, 232, 0.55);
+  background: rgba(244, 241, 232, 0.06);
+}
+
+.wb-step-button[data-back]:hover:not(:disabled) .wb-step-icon { transform: translateX(-2px); }
+
+.wb-step-button[data-forward] {
+  border-color: var(--wb-ink);
+  background: var(--wb-ink);
+  color: #0b1a20;
+  animation: wb-step-breath 3.2s ease-out infinite;
+}
+
+.wb-step-button[data-forward]:hover { background: #fff; border-color: #fff; }
+.wb-step-button[data-forward]:hover .wb-step-icon { transform: translateX(2px); }
+
+.wb-step-button:disabled { opacity: 0.3; }
+
+/* The breath: a soft ring leaves the button every few seconds. */
+@keyframes wb-step-breath {
+  0% { box-shadow: 0 0 0 0 rgba(244, 241, 232, 0.35); }
+  55%, 100% { box-shadow: 0 0 0 10px rgba(244, 241, 232, 0); }
+}
+
+/* On a phone Back folds to its chevron. The label stays for screen readers. */
+@container wb-bar (max-width: 459px) {
+  .wb-step-button[data-back] { min-width: 46px; width: 46px; padding: 0; }
+  .wb-step-button[data-back] .wb-step-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* The scene itself is the larger Continue. On the introduction a quiet cue
+   rests in the middle of the scene; a ring answers each tap where it lands. */
+.wb-tap-hint {
+  position: absolute;
+  z-index: 12;
+  left: 50%;
+  top: 42%;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 8px 14px 8px 10px;
+  border-radius: 999px;
+  background: rgba(6, 16, 24, 0.62);
   color: var(--wb-ink);
+  font: 500 0.85rem/1.2 'Space Grotesk', sans-serif;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: wb-tap-hint-in 0.8s 1.2s ease both;
+}
+
+.wb-tap-hint[hidden] { display: none; }
+
+.wb-tap-dot {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(244, 241, 232, 0.92);
+  animation: wb-tap-press 2.4s ease-in-out infinite;
+}
+
+.wb-tap-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(244, 241, 232, 0.85);
+  animation: wb-tap-ring 2.4s ease-out infinite;
+}
+
+@keyframes wb-tap-hint-in {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 6px)); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@keyframes wb-tap-press {
+  0%, 30%, 100% { transform: scale(1); }
+  12% { transform: scale(0.72); }
+}
+
+@keyframes wb-tap-ring {
+  0%, 10% { opacity: 0; transform: scale(0.8); }
+  16% { opacity: 1; }
+  55%, 100% { opacity: 0; transform: scale(2.3); }
+}
+
+.wb-tap-ripple {
+  position: fixed;
+  z-index: 60;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(244, 241, 232, 0.8);
+  pointer-events: none;
+  animation: wb-tap-ripple 0.75s ease-out forwards;
+}
+
+@keyframes wb-tap-ripple {
+  from { opacity: 1; transform: scale(0.3); }
+  to { opacity: 0; transform: scale(1.6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wb-step-button[data-forward],
+  .wb-tap-dot,
+  .wb-tap-dot::after,
+  .wb-tap-hint { animation: none; }
+  .wb-tap-dot::after { display: none; }
 }
 
 /* Medium: the boundary action names the next part. */
@@ -449,6 +804,7 @@
     .wb-fwd-long { display: inline; }
     .wb-fwd-short { display: none; }
   }
+  .wb-tap-hint { top: 24%; }
   .practice-page [data-textzone] { max-height: 66% !important; padding-top: 20px !important; }
   .practice-page [data-body] { min-height: 0; }
 }
@@ -692,83 +1048,11 @@
   text-wrap: balance;
 }
 
-.wb-complete-copy {
-  margin: 0 0 16px;
-  color: var(--wb-muted);
-  font: 400 1.02rem/1.45 'Space Grotesk', sans-serif;
-}
-
-.wb-complete {
-  position: absolute;
-  inset: 0;
-  z-index: 50;
-  display: grid;
-  place-items: center;
-  padding: 76px 16px 24px;
-  overflow: auto;
-  background: rgba(6, 16, 24, 0.5);
-  pointer-events: none;
-  animation: wb-fade-in 1.6s ease both;
-}
-
-/* A halo breathes behind the card on the same 4s-in, 6s-out wave as the opening. */
-.wb-complete::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(92vmin, 680px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(158, 231, 220, 0.2) 0%, rgba(158, 231, 220, 0) 66%);
-  transform: translate(-50%, -50%) scale(0.86);
-  animation: wb-halo 10s 0.8s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes wb-halo {
-  0%, 100% { transform: translate(-50%, -50%) scale(0.86); opacity: 0.6; }
-  40% { transform: translate(-50%, -50%) scale(1.04); opacity: 1; }
-}
-
-.wb-complete-card {
-  position: relative;
-  pointer-events: auto;
-  width: min(100%, 440px);
-  text-align: center;
-  animation: wb-card-rise 0.9s 0.8s ease-out both;
-}
-
-@keyframes wb-card-rise {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: none; }
-}
-
-.wb-proposed {
-  margin: 0 0 10px;
-  color: var(--wb-gold);
-  font: 600 0.8rem/1.3 'Space Grotesk', sans-serif;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.wb-complete-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-
-.wb-complete-actions .wb-button { min-width: 148px; }
-
 @media (max-width: 700px) {
   .practice-page [data-textzone] { max-height: 46svh !important; padding-top: 24px !important; }
 }
 
 @media (max-width: 420px) {
-  .wb-complete { padding-top: 68px; }
-  .wb-complete-actions { flex-direction: column; }
-  .wb-complete-actions .wb-button { width: 100%; }
   .wb-sheet-foot .wb-button { width: 100%; }
 }
 
@@ -776,14 +1060,11 @@
   .wb-button,
   .wb-choice,
   .wb-nav,
-  .wb-fill,
+  .wb-orb,
   .wb-map-part,
   .wb-map-step,
   .wb-map-chevron,
   .wb-card,
-  .wb-complete,
-  .wb-complete::before,
-  .wb-complete-card,
   .wb-sheet,
   .wb-sheet::backdrop,
   .wb-stage,

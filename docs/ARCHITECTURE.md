@@ -1,6 +1,6 @@
 # Architecture
 
-Wave Breathing is a static page with no build step. Netlify publishes `public/` (`netlify.toml`). Locally, the shared Studio launcher serves the same folder at http://127.0.0.1:8766/app/.
+Wave Breathing is a static page with no build step. Netlify publishes `public/` (`netlify.toml`). Locally, `launch.py` serves the app at http://127.0.0.1:8766/app/.
 
 ## Source of truth
 
@@ -9,17 +9,18 @@ Wave Breathing is a static page with no build step. Netlify publishes `public/` 
 | Practice steps, wording, stage order, step layers, navigation | `public/index.html` | Hand-edited. The stage list and handlers are in the `<script type="text/x-dc">` block near the end. It is **not** regenerated from anything. |
 | Opening screen, Appearance sheet, avatar swap, saved choice (`localStorage` key `wave-skin`) | `public/chooser.js`, `public/chooser.css` | |
 | Practice layout and navigation styling | `public/practice.css` | |
-| Environments, day/night choice, the background's position under the figure | `public/environment.js` | |
+| Environment catalog and the background's position under the fixed figure | `public/environment-layouts.js` | Every installed scene keeps its own saved position. |
+| Day/night choice and environment runtime validation | `public/environment.js` | Derives the standard asset paths and has safe built-in placement fallbacks. |
 | Runtime (DC/React loader) and fonts | `public/assets/preview-bundle/b7d63beb-….js`, `*.woff2` | Extracted from the original export. Treat as vendor files. React 18.3.1 loads from unpkg. |
 | Artwork | `public/assets/` | See [ASSETS.md](ASSETS.md). |
 
-The Studio launcher (`../Wave_Breathing_Assets/launch.py`) hardcodes `kriya1_wb/public`, and its workspace fingerprint reads `index.html`, `chooser.js`, `chooser.css`, `practice.css` and `environment.js` at that folder's top level. Keep those five files there.
+Keep `index.html`, `chooser.js`, `chooser.css`, `practice.css`, `environment-layouts.js`, and `environment.js` at the top of `public/`. The practice page loads them from there.
 
 ## Folder layout
 
 ```
 public/                     the app, served as-is
-  index.html chooser.js chooser.css practice.css environment.js
+  index.html chooser.js chooser.css practice.css environment-layouts.js environment.js
   figure-review.html        artwork review tool (needs to sit next to assets/)
   assets/                   all runtime, review and legacy assets (see ASSETS.md)
 source/legacy-generators/   inactive Python pipeline that built index.html in Sept 2026
@@ -27,13 +28,13 @@ reference/                  original exports, storyboards and uploaded artwork
 archive/                    superseded pages kept for recovery
 docs/                       this documentation, the 2 Nov audit and screenshots
 tests/                      node:test checks of environment.js and the practice script
-launch.py                   shim that runs the shared Studio launcher
+launch.py                   serves the main app on port 8766
 ```
 
 ## Relationship between the parts
 
 - **Reference → generators → app (historical).** In September 2026, `source/legacy-generators/process_figures.py` read `reference/original-netlify-index.html` and `reference/uploads/seating seqeunce.png`, wrote figure PNGs into `public/assets/figures/`, and wrote `public/index.html` and `public/transparent-preview.html`. Since then, `index.html` has been edited by hand (chooser, environments, avatars, practice navigation). The pipeline can no longer reproduce it and is locked; see `source/legacy-generators/README.md`.
-- **Studio → app.** The Asset Studio is a separate project. Avatar and environment files are exported from it and copied into `public/assets/` by hand (see [EDITING.md](EDITING.md)). The Studio also serves this folder. This repository does not change the Studio.
+- **Scene placement.** Saved positions live in `public/environment-layouts.js`. `environment.js` validates that file and falls back to the built-in grove, mountain, and office placements when the data is missing or invalid.
 - **Review tool.** `public/figure-review.html` shows the registered figures from `assets/figures/` over `assets/registered-landscape.png`. Its link opens the current app. It used to open `transparent-preview.html`, the generated preview that used these same figures, which is now in `archive/`.
 
 ## Old path → new path (cleanup of 4 Nov 2026)
@@ -58,7 +59,7 @@ All of these moves are exact renames. File contents are unchanged except where n
 
 Not moved: the five app files, `public/figure-review.html` (one link changed), all of `public/assets/`, `reference/original-netlify-index.html`, `reference/standalone-index.html`, `tests/`, `launch.py`, `netlify.toml`.
 
-Outside this repository, the Studio's `pipeline/data/pipeline.json` and `pipeline/engine.py` still name `kriya1_wb/wave_loop.py` as the source of the figure-eight. That is provenance text only, and the file is now `source/legacy-generators/wave_loop.py`. The Studio was intentionally left unchanged.
+The Asset Studio is a separate project and is not part of this app.
 
 ## Viewing archived pages
 
