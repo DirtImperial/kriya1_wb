@@ -42,7 +42,7 @@ window.WaveEnvironmentLayouts = {
       }
     },
     "studio-background-20261106-123129-2856d1": {
-      "label": "Create a young girl's bedroom with a soft pink palette, floral accents, ",
+      "label": "Bedroom",
       "locked": false,
       "stage": {
         "scale": 1.0,

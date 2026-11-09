@@ -144,7 +144,7 @@ test('finding your seat alternates front then side master, side registered for l
   assert.ok(!html.includes('animation:front-view'));
   assert.ok(!html.includes('animation:side-view'));
   assert.match(html, /html\[data-wave-avatar="man"\] \.seat-side\{transform:translate\(-\.05%,-\.108%\) scale\(1\.00256\)\}/);
-  assert.match(html, /html\[data-wave-avatar="man"\] \[data-seat="1"\]\{transform:translateX\(-1\.935%\)/);
+  assert.match(html, /html\[data-wave-avatar="man"\] \[data-seat="1"\]\{transform:translate\(-\.05%,-\.108%\) scale\(1\.00256\)/);
 });
 
 test('the shoulder instruction replaces one full frame at a time without stacking outlines', () => {

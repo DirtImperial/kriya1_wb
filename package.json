@@ -1,0 +1,8 @@
+{
+  "name": "wave-breathing",
+  "private": true,
+  "description": "Local preview for the Wave Breathing practice app.",
+  "scripts": {
+    "dev": "python3 launch.py"
+  }
+}
