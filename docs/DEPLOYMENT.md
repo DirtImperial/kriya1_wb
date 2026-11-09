@@ -1,3 +1,5 @@
+> **Historical record.** This describes the 15 September 2026 release. It predates the chooser, environments and avatars, and the files it names have since moved (see `docs/ARCHITECTURE.md`). It is not current deployment guidance.
+
 # Current production release
 
 - Site: https://wavebreathing-kriya-v2.netlify.app/

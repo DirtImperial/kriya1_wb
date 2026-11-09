@@ -1,0 +1,29 @@
+{
+  "id": "spine-upright-man-v4",
+  "label": "Spine upright · corrected approved stills",
+  "instruction": "Tall, but never rigid.",
+  "source": "user-supplied exact still frames",
+  "canvas": {
+    "width": 1254,
+    "height": 1254
+  },
+  "loop": true,
+  "frames": [
+    {
+      "file": "frame-01-rounded.png",
+      "label": "Spine softly rounded",
+      "duration_ms": 900
+    },
+    {
+      "file": "frame-02-lengthening.png",
+      "label": "Spine lengthening",
+      "duration_ms": 700
+    },
+    {
+      "file": "frame-03-upright.png",
+      "label": "Tall and comfortably upright",
+      "duration_ms": 2200
+    }
+  ],
+  "notes": "Exact corrected PNG stills supplied by the user. All three share the same seated baseline and horizontal center. They are ordered by increasing crown-to-seat height: shortest/rounded, intermediate/lengthening, then tallest/upright. After the upright hold, the sequence restarts from the rounded first frame."
+}

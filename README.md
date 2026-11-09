@@ -1,17 +1,42 @@
 # Wave Breathing
 
-Static website with five chapters: Posture, Breath, Mantra, Visualization and Integration.
+A static guided practice: an Introduction, then six parts (Posture, Breath, Mantra, Visualization, Integration, and Compassion and Thanks), with a choice of environment and avatar.
+
+## Working copy and local preview
+
+- **Working directory:** `~/Desktop/kriya1_wb`
+- **Start:** `python3 launch.py`, or `python3 launch.py --no-open` for agents. Running the command again reuses the same server.
+- **App:** http://127.0.0.1:8766/app/
+- **Tests:** `node --test tests/*.test.js`
+
+## Entry point and source of truth
+
+`public/index.html` is the app and is edited by hand. It loads `chooser.js`, `chooser.css`, `practice.css` and `environment.js` from the same folder. Keep those files, plus `environment-layouts.js`, at the top of `public/`. Details are in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
+## Active assets
+
+- Avatars: `public/assets/avatars/` (Man, Woman, Boy and Girl stills, and their thumbnails). `index.html` is written against `public/assets/female-*.svg`, and `chooser.js` swaps those for the chosen avatar.
+- Environments: `public/assets/environments/{grove,mountain,office}/` (day, night and thumbnails)
+- Other practice art: `public/assets/grove.svg`, `babaji-mountain-v1.png`, `mantra-arrow-original.png`, `share-preview-v1.png` (link preview)
+- Runtime and fonts: `public/assets/preview-bundle/`
+
+Every file's size, transparency and roles: [docs/ASSETS.md](docs/ASSETS.md). How to add or replace an avatar or environment: [docs/EDITING.md](docs/EDITING.md).
+
+## Do not regenerate
+
+`public/index.html`, `public/assets/figures/`, and the other files the legacy pipeline wrote must **not** be regenerated. The Python scripts in `source/legacy-generators/` built the September 2026 page and would overwrite the current app with it. They are locked by a guard. See `source/legacy-generators/README.md`.
+
+## How the folders relate
+
+| Folder | Role |
+| --- | --- |
+| `public/` | The app as served locally and published by Netlify (publish directory `public`, no build). Also holds `figure-review.html`, an artwork review page for the registered figures. |
+| `source/legacy-generators/` | Inactive generator pipeline. It produced earlier versions of `public/`. |
+| `reference/` | Original exports and supplied artwork the generators read from. Not served. |
+| `archive/` | Superseded pages (the last generated page and three early variants) kept for recovery |
+| `docs/` | Architecture, asset manifest, editing guide, the 2 Nov 2026 audit with screenshots, and historical deployment notes |
+| `tests/` | Checks of `environment.js` and the practice's progress rules, run against the shipped files |
 
 ## Publish
 
-Netlify should deploy GitHub branch `main` with publish directory `public` and no build command. `public/index.html` is the current release, including all animations, wording and artwork. Commit changes to this branch to trigger publication once the repository connection is configured.
-
-## Edit and preview
-
-Run `python -m http.server 5173 --directory public` and open http://localhost:5173/.
-
-The Python source modules `chapter_structure.py`, `solar_spiral.py`, and `visualization_scene.py` define the chapters and custom graphics. `process_figures.py` regenerates both `public/index.html` and `public/transparent-preview.html` using Python, Pillow and NumPy. The original export used as its input is preserved in `reference/original-netlify-index.html`.
-
-The generated HTML and assets are committed, so Netlify does not need Python or image libraries. Keep generator changes and generated files together in each commit.
-
-`public/figure-review.html` is an artwork review gallery. Original source images remain available for future edits. Do not commit credentials or local caches.
+Netlify deploys GitHub branch `main` with publish directory `public`. Experiments stay on branches. Don't overwrite the production baseline with an unverified export. `docs/DEPLOYMENT.md` records the 15 Sep 2026 release and is historical. Don't commit credentials or local caches.

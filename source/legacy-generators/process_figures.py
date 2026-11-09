@@ -1,4 +1,7 @@
 """Reproducible alpha extraction and landmark registration; never edits source art."""
+# INACTIVE: this script overwrites public/index.html. The guard runs before any import or write.
+from legacy_guard import refuse_unless_allowed
+refuse_unless_allowed('process_figures.py')
 from pathlib import Path
 from collections import deque
 import json, re, base64, gzip
@@ -10,11 +13,11 @@ from mantra_scene import apply_mantra_scene
 from visualization_scene import apply_visualization_scene
 from PIL import Image, ImageDraw, ImageFilter
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 PUBLIC = ROOT / 'public'
 OUT = PUBLIC / 'assets' / 'figures'
 OUT.mkdir(parents=True, exist_ok=True)
-SHEET = Image.open(PUBLIC / 'uploads' / 'seating seqeunce.png').convert('RGB')
+SHEET = Image.open(ROOT / 'reference' / 'uploads' / 'seating seqeunce.png').convert('RGB')
 
 # Original-sheet pixel coordinates: crop, anatomical crown y, pelvis x/y,
 # and exterior gaps between arm and torso. The halo is not a scale landmark.

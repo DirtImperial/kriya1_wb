@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "id": "head-position-chin-down-man-v1",
+  "label": "Position the head · approved man master",
+  "instruction": "Begin with the head slightly too high, then settle into a resting position with the chin slightly down and the cervical spine long.",
+  "canvas": [1254, 1254],
+  "background": "transparent",
+  "playback": {
+    "mode": "single-image-frame-replacement",
+    "loop": true,
+    "stacking": false,
+    "endBehavior": "repeat-from-first-frame"
+  },
+  "frames": [
+    {"file": "frame-01-head-high.png", "label": "Head slightly high", "durationMs": 360},
+    {"file": "frame-02-lower-1.png", "label": "Begin lowering", "durationMs": 110},
+    {"file": "frame-03-lower-2.png", "label": "Continue lowering", "durationMs": 110},
+    {"file": "frame-04-near-rest.png", "label": "Near rest", "durationMs": 110},
+    {"file": "frame-05-rest.png", "label": "Rest", "durationMs": 145},
+    {"file": "frame-06-hold-1.png", "label": "Settle", "durationMs": 210},
+    {"file": "frame-07-hold-2.png", "label": "Soft hold", "durationMs": 340},
+    {"file": "frame-08-rest-final.png", "label": "Final resting position", "durationMs": 1440}
+  ],
+  "preview": "position-head-chin-down-settle.webp",
+  "contactSheet": "contact-sheet.png",
+  "sourceSequence": "position-head-chin-down-male-v9",
+  "checks": {
+    "fullCanvasReplacement": true,
+    "loopsContinuously": true,
+    "stackingArtifactsRemoved": true,
+    "featurelessFace": true,
+    "bodyLockedToMaster": true,
+    "purpleArrowEveryFrame": false,
+    "headGhostOutlineRemoved": true,
+    "headContourCount": 1,
+    "protectedPixelsBelowY480Difference": 0,
+    "protectedNonHeadBodyDifferenceAcrossFrames": 0,
+    "canonicalBodyAcrossFrames": true,
+    "canonicalArrowAcrossFrames": false,
+    "pixelDetailLockedAcrossFrames": true,
+    "headSourceLockedToRegisteredMaster": true,
+    "headTransformScale": 1,
+    "headTransformFilter": "point",
+    "neckContinuityRepair": "row-455-copied-from-canonical-row-454",
+    "neckContinuityAcrossFrames": true,
+    "cueArrow": "animated on the practice page",
+    "approvedStaticFrames": true
+  }
+}

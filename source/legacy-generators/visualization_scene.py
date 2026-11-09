@@ -4,7 +4,10 @@ import numpy as np
 from PIL import Image
 
 def apply_visualization_scene(template):
-    public=Path(__file__).resolve().parent/'public'
+    # INACTIVE: writes public/assets/visualization-landscape.png. Guard runs before the write.
+    from legacy_guard import refuse_unless_allowed
+    refuse_unless_allowed('visualization_scene.py')
+    public=Path(__file__).resolve().parents[2]/'public'
     src=np.asarray(Image.open(public/'assets/01-landscape.png').convert('RGB'))
     scale=360/284
     tx=512-636*scale

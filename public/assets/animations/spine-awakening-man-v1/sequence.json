@@ -1,0 +1,36 @@
+{
+  "id": "spine-awakening-man-v1",
+  "label": "Breathing spine awakening · approved man",
+  "instruction": "Visualize a hollow luminous column roughly in the center of your back. With every in-breath and out-breath it becomes more awake and energized.",
+  "source": "studio/source-assets/spine-awakening",
+  "canvas": {
+    "width": 1254,
+    "height": 1254
+  },
+  "loop": true,
+  "frame_count": 60,
+  "frame_duration_ms": 120,
+  "duration_ms": 7200,
+  "preview": "spine-glow-preview.webp",
+  "frames_directory": "smooth-breath-sequence",
+  "body_sources": {
+    "original": "studio/source-assets/spine-awakening/body-master-original.png",
+    "cleanup_guide": "studio/source-assets/spine-awakening/body-outline-cleanup-guide.png",
+    "rendered": "studio/source-assets/spine-awakening/body-master-preserved.png",
+    "registration": "exact original 1254 by 1254 canvas, alpha silhouette, seated baseline, and horizontal anchor",
+    "color": "all non-target original RGB pixels are byte-for-byte unchanged",
+    "outline": "only targeted black-looking contour pixels are replaced with coherent original-palette navy"
+  },
+  "app_registration": {
+    "master": "assets/avatars/man/poses/side-upright.png",
+    "master_canvas": [1024, 1024],
+    "render_canvas": [1254, 1254],
+    "method": "one shared CSS transform on the animation element; every frame receives the exact same registration",
+    "scale": 0.9383,
+    "translate_percent": [-1.054, 2.807],
+    "target": "match the canonical male side-upright solid-pixel height, horizontal center, and seated baseline while retaining the original source pixels"
+  },
+  "spine_overlay": "studio/source-assets/spine-awakening/spine-only-layer.png",
+  "motion": "The original body remains perfectly registered and still while the stepped spine illumination reaches the top sooner, flows outward in both directions as one halo pulse, and reverses on exhale.",
+  "spine": "The locked articulated spine illuminates in the male master's crisp pixel style; at full illumination matched stepped halos expand on both sides, settle, and reverse while the avatar's contour itself remains clean."
+}
