@@ -353,9 +353,9 @@ img[alt="luminous body"]{mix-blend-mode:normal!important;animation:none!importan
 /* One anatomical registration for every approved seated male asset: the
    palms-down crown, centre line and floor contact are the shared anchors. */
 html[data-wave-avatar="man"] .seat-side{transform:translate(-.05%,-.108%) scale(1.00256)}
-/* The cushion extends farther left than the figure itself. Align the visible
-   head/spine/torso landmarks, which are drawn 19px right of the side master. */
-html[data-wave-avatar="man"] [data-seat="1"]{transform:translateX(-1.935%);transform-origin:50% 50%}
+/* The cushion pose is registered to the side master, so it shares that
+   placement. The hips rise onto the cushion without shifting the figure. */
+html[data-wave-avatar="man"] [data-seat="1"]{transform:translate(-.05%,-.108%) scale(1.00256);transform-origin:50% 50%}
 /* The approved shoulder and spine stills share the same 1254px registration,
    so changing posture never moves the seated baseline. */
 html[data-wave-avatar="man"] .spine-upright-sequence{transform:none}
@@ -735,7 +735,7 @@ html[data-wave-avatar="man"] .head-position-sequence{transform:translate(-1.054%
       <!-- seated posture frames (crossfade) -->
       <div data-layer="seated" style="position:absolute; inset:0; opacity:0; transition:opacity 1s ease; mix-blend-mode:screen;">
         <div data-seat="0" class="seat-views" style="position:absolute;inset:0;opacity:0"><img class="seat-front" src="assets/female-cloud-0.svg" alt="Front view of seated posture"/><img class="seat-side" src="assets/female-pose-1.svg?v=2" alt="Side view of seated posture"/></div>
-        <img data-seat="1" src="assets/female-pose-0.svg?v=2" alt="use a cushion" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:4% 6% 6%; opacity:0; transition:opacity .9s ease; animation:seatedFloat 8s ease-in-out infinite;">
+        <img data-seat="1" src="assets/female-pose-0.svg?v=3" alt="use a cushion" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; padding:4% 6% 6%; opacity:0; transition:opacity .9s ease; animation:seatedFloat 8s ease-in-out infinite;">
         <div data-seat="2" class="shoulder-release-sequence" role="img" aria-label="Shoulders gently dropping down and away from the ears, with arrows moving downward above each shoulder">
           <img data-shoulder-release-frame data-avatar-slot="female-shoulders-relaxed-0.png" src="assets/avatars/woman.png" alt="">
           <img class="seat-cue-arrow shoulder-cue-arrow shoulder-cue-arrow-left" src="assets/animations/seat-cue-arrows-v1/arrow-down.png" alt="" aria-hidden="true">
