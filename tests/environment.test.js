@@ -113,6 +113,61 @@ test('scene availability is limited to the configured avatars', () => {
   assert.equal(env.supportsAvatar('grove', 'studio-new-avatar'), true);
 });
 
+test('available avatars share one placement independently of the scene', () => {
+  const layouts = {
+    schema: 1,
+    frame: { avatarStage: { scale: 0.82, x: 14, y: -22 } },
+    environments: {
+      'girls-room': {
+        label: "Young girl's room",
+        avatars: ['girl'],
+        stage: { scale: 1, x: 0, y: 0 }
+      },
+      studio: {
+        label: 'Studio',
+        stage: { scale: 1.1, x: -30, y: -50 },
+        avatarStages: { man: { scale: 1.3, x: 200, y: 200 } }
+      }
+    }
+  };
+  const { env } = load(local(12), layouts);
+  assert.deepEqual({ ...env.avatarStage('girls-room', 'girl') }, { scale: 0.82, x: 14, y: -22 });
+  assert.deepEqual({ ...env.avatarStage('girls-room', 'boy') }, { scale: 0.82, x: 14, y: -22 });
+  assert.deepEqual({ ...env.avatarStage('studio', 'man') }, { scale: 0.82, x: 14, y: -22 });
+  assert.equal(env.updatePlacement(
+    'girls-room',
+    { scale: 1, x: 0, y: 0 },
+    ['girl'],
+    "Young girl's room",
+    { scale: 0.9, x: -8, y: 11 }
+  ), true);
+  assert.deepEqual({ ...env.avatarStage('girls-room', 'girl') }, { scale: 0.9, x: -8, y: 11 });
+  assert.deepEqual({ ...env.avatarStage('studio', 'woman') }, { scale: 0.9, x: -8, y: 11 });
+});
+
+test('switching avatars cannot change the environment placement', () => {
+  const layouts = {
+    schema: 1,
+    environments: {
+      bedroom: {
+        label: 'Bedroom',
+        avatars: ['man', 'woman'],
+        stage: { scale: 1.2, x: -120, y: -80 },
+        avatarStages: {
+          man: { scale: 1.1, x: 20, y: 35 },
+          woman: { scale: 0.9, x: -10, y: -15 }
+        }
+      }
+    }
+  };
+  const { env, stage } = load(local(12), layouts);
+  env.apply('bedroom', 'day', 'man');
+  const manBackground = stage.transform;
+  env.apply('bedroom', 'day', 'woman');
+  assert.equal(stage.transform, manBackground);
+  assert.equal(stage.transform, 'matrix(1.2 0 0 1.2 -120 -80)');
+});
+
 test('a live placement update also renames the scene', () => {
   const { env } = load(local(12));
   assert.equal(env.updatePlacement('grove', { scale: 1, x: 0, y: 0 }, null, 'Moonlit Garden'), true);
@@ -169,9 +224,16 @@ test('the opening chooser hides scenes that are unavailable to the selected avat
   const chooser = fs.readFileSync(path.join(__dirname, '../public/chooser.js'), 'utf8');
   const chooserCss = fs.readFileSync(path.join(__dirname, '../public/chooser.css'), 'utf8');
   assert.match(chooser, /ENV\.supportsAvatar\(choice\.environment, choice\.avatar\)/);
+  assert.match(chooser, /const samePlace = available\.find/);
+  assert.match(chooser, /choice\.environment = samePlace \|\| available\[0\]/);
   assert.match(chooser, /button\.hidden = !available/);
   assert.match(chooser, /ENV\.apply\(choice\.environment, choice\.time, choice\.avatar\)/);
   assert.match(chooserCss, /\.skin-place\[hidden\]\s*\{\s*display:\s*none/);
+  assert.match(chooser, /ENV\.avatarStage\(choice\.environment, choice\.avatar\)/);
+  assert.match(chooser, /stage:\s*splitStage\(env\.stage\)/);
+  assert.match(chooserCss, /transform:\s*translateX\(-23%\)/);
+  assert.doesNotMatch(chooser, /skin-preview-scene/);
+  assert.doesNotMatch(chooserCss, /skin-preview-scene/);
 });
 
 test('a reload starts the opening chooser on the first option of each row', () => {
@@ -194,4 +256,7 @@ test('out-of-bounds placements are covered by upright zoom instead of mirrored c
   const html = fs.readFileSync(path.join(__dirname, '../public/index.html'), 'utf8');
   assert.equal((html.match(/data-environment-image/g) || []).length, 1);
   assert.doesNotMatch(html, /data-environment-image[^>]+matrix\(-1/);
+  assert.match(html, /--wave-avatar-scale/);
+  assert.match(html, /--wave-avatar-x/);
+  assert.match(html, /--wave-avatar-y/);
 });

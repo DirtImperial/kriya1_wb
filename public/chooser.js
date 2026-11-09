@@ -85,9 +85,9 @@
   // The intro draws the scene and figure with the practice's own geometry (the
   // .grove-world crop and the graphic zone box), so Begin doesn't move anything.
   const STAGE_FRAME = 'assets/female-cloud-0.svg';
-  // The chooser uses a split desktop canvas, so it needs a neutral background
-  // stage instead of the more aggressive per-scene practice placements.
-  const CHOOSER_STAGE = Object.freeze({ scale: 1, x: 0, y: 0 });
+  // The split chooser uses the same saved stage as the practice. Its full-width
+  // composition is translated into the left panel by CSS, preserving the exact
+  // relationship between the figure and the scenery.
   const worldMarkup = () =>
     '<div class="skin-world" aria-hidden="true">' +
       '<svg viewBox="0 210 1536 814" preserveAspectRatio="xMidYMid slice" width="100%" height="100%"><g data-skin-stage="">' +
@@ -180,6 +180,21 @@
   const closeBtn = picker.querySelector('#skin-close');
   const figure = picker.querySelector('.skin-figure');
 
+  function placeAvatar() {
+    const placement = ENV.avatarStage(choice.environment, choice.avatar);
+    figure.style.setProperty('--skin-avatar-x', `${placement.x / 6.6}%`);
+    figure.style.setProperty('--skin-avatar-y', `${placement.y / 6.6}%`);
+    figure.style.setProperty('--skin-avatar-scale', placement.scale);
+  }
+
+  function splitStage(stage) {
+    const stageBox = picker.querySelector('.skin-stage').getBoundingClientRect();
+    const previewCenter = stageBox.top + stageBox.height / 2;
+    const groveUnit = Math.max(window.innerWidth / 1536, window.innerHeight / 814);
+    const practiceCenter = (window.innerHeight - groveUnit * 814) / 2 + groveUnit * 280;
+    return { scale: stage.scale, x: stage.x, y: stage.y + (previewCenter - practiceCenter) / groveUnit };
+  }
+
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // A changed scene or figure rises out of a dim instead of snapping in.
   const soften = (el) => {
@@ -188,8 +203,11 @@
 
   function ensureCompatibleEnvironment() {
     if (ENV.supportsAvatar(choice.environment, choice.avatar)) return;
-    const available = Object.keys(ENV.ENVIRONMENTS).find((scene) => ENV.supportsAvatar(scene, choice.avatar));
-    if (available) choice.environment = available;
+    const current = ENV.ENVIRONMENTS[choice.environment];
+    const currentLabel = current && current.label.trim().toLocaleLowerCase();
+    const available = Object.keys(ENV.ENVIRONMENTS).filter((scene) => ENV.supportsAvatar(scene, choice.avatar));
+    const samePlace = available.find((scene) => ENV.ENVIRONMENTS[scene].label.trim().toLocaleLowerCase() === currentLabel);
+    if (samePlace || available[0]) choice.environment = samePlace || available[0];
   }
 
   function paint() {
@@ -202,7 +220,7 @@
     const sceneChanged = Boolean(firstImage.getAttribute('href') && firstImage.getAttribute('href') !== env.variants[variant]);
     // While Begin is settling the scene into the introduction, leave that motion alone.
     if (!picker.classList.contains('is-entering')) {
-      ENV.renderStage(stage, { path: env.variants[variant], stage: CHOOSER_STAGE });
+      ENV.renderStage(stage, { path: env.variants[variant], stage: splitStage(env.stage) });
     }
     if (sceneChanged) soften(picker.querySelector('.skin-world'));
     picker.dataset.time = variant;
@@ -222,6 +240,7 @@
       if (figure.getAttribute('src')) soften(figure);
       figure.src = figureSrc;
     }
+    placeAvatar();
     figure.alt = character.label + ', seated in meditation';
     picker.querySelectorAll('[data-avatar],[data-environment]').forEach((button) => {
       const key = button.dataset.avatar ? 'avatar' : 'environment';
@@ -233,6 +252,9 @@
   }
 
   window.addEventListener('wave-placement-updated', () => paint());
+  window.addEventListener('resize', () => {
+    if (!picker.classList.contains('is-entering')) paint();
+  });
 
   function syncMode() {
     const settings = mode === 'settings';
@@ -319,12 +341,12 @@
     stopStageMove();
     picker.classList.remove('is-leaving', 'is-entering');
   }
-  // Drift the neutral chooser crop onto the practice placement, so the grove
-  // the introduction reveals is the one already on screen.
+  // Keep the saved scene placement stable while the split view widens into the
+  // full practice composition.
   function settleScene(duration) {
     const stage = picker.querySelector('[data-skin-stage]');
     const practice = ENV.ENVIRONMENTS[choice.environment].stage;
-    const from = CHOOSER_STAGE;
+    const from = splitStage(practice);
     const to = practice;
     const path = ENV.ENVIRONMENTS[choice.environment].variants[ENV.resolve(choice.time)];
     const start = performance.now();

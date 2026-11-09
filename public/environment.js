@@ -1,10 +1,10 @@
 // Day/night environment selection, from the Wave Breathing style pack 1.2.0 runtime helper.
 // Device-local time only (no location). The variant is chosen once when a practice
 // begins and kept until the next one; changing art never touches practice state.
-// The figure never moves or resizes between scenes or times: each background is moved
-// under it instead (stage transforms from the asset studio's export). A requested
-// placement is enlarged and clamped just enough to cover the frame, so scenery always
-// stays upright and no mirrored tiles or repeated floor strips are needed.
+// Background and avatar transforms are independent. Every avatar uses one shared global
+// registration, while each environment keeps its own Studio placement behind that figure.
+// A requested background placement is enlarged and clamped just enough to cover the
+// frame, so scenery stays upright with no mirrored tiles or repeated floor strips.
 (() => {
   const SCENE_WIDTH = 1536;
   const SCENE_HEIGHT = 1024;
@@ -40,6 +40,15 @@
   function validAvatars(avatars) {
     return Array.isArray(avatars) && avatars.length > 0 && avatars.every((avatar) => typeof avatar === 'string' && /^[a-z0-9-]+$/.test(avatar));
   }
+
+  function validAvatarStage(stage) {
+    return stage && ['scale', 'x', 'y'].every((key) => Number.isFinite(stage[key])) &&
+      stage.scale >= 0.5 && stage.scale <= 1.5 && Math.abs(stage.x) <= 660 && Math.abs(stage.y) <= 660;
+  }
+
+  let sharedAvatarStage = validAvatarStage(source && source.frame && source.frame.avatarStage)
+    ? { ...source.frame.avatarStage }
+    : { scale: 1, x: 0, y: 0 };
 
   function environmentEntry(scene, item) {
     const fallback = FALLBACK_LAYOUTS[scene];
@@ -109,6 +118,10 @@
     return Boolean(item && typeof avatar === 'string' && (!item.avatars || item.avatars.includes(avatar)));
   }
 
+  function avatarStage() {
+    return { ...sharedAvatarStage };
+  }
+
   function renderStage(stage, asset) {
     const s = asset.stage;
     const matrix = `matrix(${s.scale} 0 0 ${s.scale} ${s.x} ${s.y})`;
@@ -148,20 +161,27 @@
     const root = document.documentElement;
     root.dataset.environment = scene;
     root.dataset.time = variant;
+    const figure = avatarStage(scene, avatar);
+    if (root.style && typeof root.style.setProperty === 'function') {
+      root.style.setProperty('--wave-avatar-scale', figure.scale);
+      root.style.setProperty('--wave-avatar-x', figure.x);
+      root.style.setProperty('--wave-avatar-y', figure.y);
+    }
     document.querySelectorAll('[data-environment-stage]').forEach((stage) => renderStage(stage, asset));
     return asset;
   }
 
-  function updatePlacement(scene, stage, avatars, label) {
+  function updatePlacement(scene, stage, avatars, label, savedAvatarStage) {
     if (!ENVIRONMENTS[scene] || !validStage(stage)) return false;
     ENVIRONMENTS[scene].stage = coverStage(stage);
     if (typeof label === 'string' && label.trim()) ENVIRONMENTS[scene].label = label.trim();
     if (avatars === null) ENVIRONMENTS[scene].avatars = null;
     else if (validAvatars(avatars)) ENVIRONMENTS[scene].avatars = [...new Set(avatars)];
+    if (validAvatarStage(savedAvatarStage)) sharedAvatarStage = { ...savedAvatarStage };
     const root = document.documentElement;
     if (root.dataset.environment === scene) apply(scene, root.dataset.time || 'auto');
     if (typeof window.dispatchEvent === 'function' && typeof CustomEvent === 'function') {
-      window.dispatchEvent(new CustomEvent('wave-placement-updated', { detail: { scene: scene, label: ENVIRONMENTS[scene].label, stage: ENVIRONMENTS[scene].stage, avatars: ENVIRONMENTS[scene].avatars } }));
+      window.dispatchEvent(new CustomEvent('wave-placement-updated', { detail: { scene: scene, label: ENVIRONMENTS[scene].label, stage: ENVIRONMENTS[scene].stage, avatars: ENVIRONMENTS[scene].avatars, avatarStage: avatarStage() } }));
     }
     return true;
   }
@@ -169,7 +189,7 @@
   function receivePlacement(event) {
     const detail = event && event.data ? event.data : event;
     if (!detail || detail.type !== 'wave-placement-saved') return;
-    updatePlacement(detail.scene, detail.stage, detail.avatars, detail.label);
+    updatePlacement(detail.scene, detail.stage, detail.avatars, detail.label, detail.avatarStage);
   }
 
   if (typeof BroadcastChannel === 'function') {
@@ -196,6 +216,7 @@
     renderStage: renderStage,
     coverStage: coverStage,
     supportsAvatar: supportsAvatar,
+    avatarStage: avatarStage,
     updatePlacement: updatePlacement
   });
 })();
