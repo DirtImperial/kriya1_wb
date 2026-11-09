@@ -1,5 +1,6 @@
 [build]
   publish = "public"
+  # This static app is published directly; Netlify does not need a build step.
   # Keep the repo root as the base so a dashboard base directory cannot
   # make the publish path resolve to a folder that does not exist.
   base = "."
